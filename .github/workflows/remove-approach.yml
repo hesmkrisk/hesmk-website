@@ -1,0 +1,60 @@
+name: Remove HESMK Approach section
+on:
+  push:
+    branches: [main]
+permissions:
+  contents: write
+jobs:
+  remove-approach:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Remove approach section and compact styling
+        shell: bash
+        run: |
+          set -euo pipefail
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p=Path('index.html')
+          s=p.read_text(encoding='utf-8')
+          s,n=re.subn(r'\s*<!-- APPROACH -->.*?<section class="section" id="services">', '\n\n  <!-- SERVICES -->\n  <section class="section" id="services">', s, count=1, flags=re.S|re.I)
+          if n != 1: raise SystemExit('Approach section not found')
+          s,n=re.subn(r'\s*<a href="#approach" onclick="closeMenu\(\)">Approach</a>\s*', '\n', s, count=1)
+          if n != 1: raise SystemExit('Approach nav link not found')
+          # Compact, sophisticated spacing without changing the color philosophy.
+          replacements={
+            '.section { padding: 105px 0; }':'.section { padding: 78px 0; }',
+            '.hero-content {\n      position: relative;\n      z-index: 2;\n      max-width: 830px;\n      padding: 90px 0;\n    }':'.hero-content {\n      position: relative;\n      z-index: 2;\n      max-width: 830px;\n      padding: 68px 0;\n    }',
+            '.hero h1 {\n      max-width: 880px;\n      margin-bottom: 28px;\n    }':'.hero h1 {\n      max-width: 880px;\n      margin-bottom: 22px;\n    }',
+            '.hero p {\n      max-width: 710px;\n      font-size: 1.15rem;\n      color: #c2cdd5;\n      margin-bottom: 36px;\n    }':'.hero p {\n      max-width: 710px;\n      font-size: 1.05rem;\n      color: #c2cdd5;\n      margin-bottom: 28px;\n    }',
+            '.hero-note {\n      margin-top: 55px;':'.hero-note {\n      margin-top: 34px;',
+            '.intro-grid {\n      display: grid;\n      grid-template-columns: .9fr 1.1fr;\n      gap: 80px;':'.intro-grid {\n      display: grid;\n      grid-template-columns: .9fr 1.1fr;\n      gap: 55px;',
+            '.services-grid {\n      display: grid;\n      grid-template-columns: repeat(2, 1fr);\n      gap: 18px;':'.services-grid {\n      display: grid;\n      grid-template-columns: repeat(2, 1fr);\n      gap: 14px;',
+            '.service-card {\n      padding: 35px;':'.service-card {\n      padding: 28px;',
+            '.service-icon {\n      width: 46px;\n      height: 46px;':'.service-icon {\n      width: 40px;\n      height: 40px;',
+            '.sector {\n      min-height: 175px;\n      padding: 27px;':'.sector {\n      min-height: 145px;\n      padding: 22px;',
+            '.contact-grid {\n      display: grid;\n      grid-template-columns: .7fr 1.3fr;\n      gap: 70px;':'.contact-grid {\n      display: grid;\n      grid-template-columns: .7fr 1.3fr;\n      gap: 50px;',
+            'form {\n      display: grid;\n      grid-template-columns: 1fr 1fr;\n      gap: 16px;\n      padding: 35px;':'form {\n      display: grid;\n      grid-template-columns: 1fr 1fr;\n      gap: 13px;\n      padding: 28px;',
+            'footer {\n      background: #050f17;\n      color: white;\n      padding: 65px 0 25px;':'footer {\n      background: #050f17;\n      color: white;\n      padding: 50px 0 22px;'
+          }
+          for a,b in replacements.items():
+              if a in s: s=s.replace(a,b,1)
+          p.write_text(s,encoding='utf-8')
+          PY
+      - name: Validate
+        run: |
+          set -euo pipefail
+          ! grep -q '<!-- APPROACH -->' index.html
+          ! grep -q 'id="approach"' index.html
+          ! grep -q 'href="#approach"' index.html
+          grep -q '<!-- SERVICES -->' index.html
+      - name: Commit and remove workflow
+        run: |
+          git config user.name 'hesmkrisk'
+          git config user.email 'kahut4777@gmail.com'
+          git add index.html
+          git rm -f .github/workflows/remove-approach.yml
+          git add -A
+          git commit -m 'Remove approach section and compact homepage'
+          git push origin main
