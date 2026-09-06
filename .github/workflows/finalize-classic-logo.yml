@@ -1,0 +1,57 @@
+name: Finalize HESMK Classic Authority Logo
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  finalize:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install selected logo and clean temporary files
+        env:
+          GH_TOKEN: ${{ github.token }}
+          LOGO_BLOB_SHA: 1f2a1db8af69e12a173d5d3abbc7ef24ddc200c2
+        run: |
+          set -euo pipefail
+          curl -fsSL -H "Authorization: Bearer ${GH_TOKEN}" -H "Accept: application/vnd.github+json" \
+            "https://api.github.com/repos/${GITHUB_REPOSITORY}/git/blobs/${LOGO_BLOB_SHA}" \
+            | jq -r '.content' | tr -d '\n' | base64 --decode > logo-classic-authority.png
+
+          python - <<'PY'
+          from pathlib import Path
+          import re
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          logo = '<img class="brand-logo" src="logo-classic-authority.png" alt="HESMK Integrated Solutions logo">'
+          s2, n = re.subn(r'<img\s+class="brand-logo"[^>]*>', logo, s, count=1, flags=re.I)
+          if n == 0:
+              s2, n = re.subn(r'(<a\s+class="brand"[^>]*>).*?(</a>)', rf'\1\n      {logo}\n    \2', s, count=1, flags=re.I|re.S)
+          if n == 0:
+              raise SystemExit('Could not locate the HESMK brand lockup in index.html')
+          p.write_text(s2, encoding='utf-8')
+          PY
+
+          for f in _logo-note.txt logo-classic-authority.txt test.txt commit-check.txt logo-install-marker _STOP.md _oops.txt; do
+            rm -f "$f"
+          done
+
+      - name: Validate and commit
+        run: |
+          set -euo pipefail
+          test -s logo-classic-authority.png
+          grep -q 'logo-classic-authority.png' index.html
+          git config user.name 'hesmkrisk'
+          git config user.email 'kahut4777@gmail.com'
+          git add index.html logo-classic-authority.png
+          git rm -f .github/workflows/finalize-classic-logo.yml 2>/dev/null || true
+          git add -A
+          git commit -m 'Install HESMK Classic Authority logo' || exit 0
+          git push origin main
