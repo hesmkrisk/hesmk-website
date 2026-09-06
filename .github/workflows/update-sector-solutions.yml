@@ -1,0 +1,87 @@
+name: Update Sector Solutions
+on:
+  push:
+    paths:
+      - '.github/workflows/update-sector-solutions.yml'
+
+jobs:
+  update-sectors:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Reorder and remove sector cards
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          sector_start = s.find('<div class="sector-grid">')
+          sector_end = s.find('</div>\n    </div>\n  </section>', sector_start)
+          if sector_start == -1 or sector_end == -1:
+              raise SystemExit('Sector grid not found')
+
+          grid = s[sector_start:sector_end]
+
+          def card(title, body):
+              return f'''        <article class="sector reveal">\n          <h3>{title}</h3>\n          <p>{body}</p>\n        </article>\n'''
+
+          desired = (
+              '<div class="sector-grid">\n'
+              + card('Foreign Workers Protection', 'Risk-based protection, security planning and operational security for foreign personnel working in Pakistan.')
+              + card('CPEC Projects Protection', 'Risk-based security assessment and protective security planning for CPEC projects, personnel and critical assets.')
+              + card('Corporate & Commercial', 'Protecting people, assets, information and business operations.')
+              + card('Banking & Financial Services', 'Security risk, facilities, branches, critical assets and operational resilience.')
+              + card('Industrial & Manufacturing', 'Protection of people, facilities, supply chains and critical operations.')
+              + card('Real Estate & Housing', 'Community security, perimeter protection, access management and emergency preparedness.')
+              + card('Healthcare', 'Protection of patients, staff, facilities and critical services.')
+              + card('NGOs & INGOs', 'Context-specific security risk management and operational security.')
+              + '</div>'
+          )
+
+          s = s[:sector_start] + desired + s[sector_end+len('</div>'):]
+
+          # Also remove these sectors from the contact-form sector selector.
+          s = re.sub(r'\s*<option>Government & Public Sector</option>', '', s, count=1)
+          s = re.sub(r'\s*<option>Critical Infrastructure</option>', '', s, count=1)
+
+          p.write_text(s, encoding='utf-8')
+
+          required = [
+              'Foreign Workers Protection',
+              'CPEC Projects Protection',
+              'Corporate & Commercial',
+              'Banking & Financial Services',
+              'Industrial & Manufacturing',
+              'Real Estate & Housing',
+              'Healthcare',
+              'NGOs & INGOs'
+          ]
+          for item in required:
+              if item not in s:
+                  raise SystemExit(f'Missing required sector: {item}')
+          if 'Government & Public Sector' in s:
+              raise SystemExit('Government & Public Sector still present')
+          if '<h3>Critical Infrastructure</h3>' in s:
+              raise SystemExit('Critical Infrastructure sector card still present')
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && { echo "No changes to commit"; exit 0; }
+          git commit -m "Reorder sector solutions and remove government and critical infrastructure"
+          git push
+
+      - name: Remove this temporary workflow
+        if: success()
+        shell: bash
+        run: |
+          git rm .github/workflows/update-sector-solutions.yml
+          git commit -m "Remove temporary sector workflow"
+          git push
