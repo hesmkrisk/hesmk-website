@@ -1,0 +1,45 @@
+name: Fix HESMK Classic Authority logo
+
+on:
+  push:
+    branches: [main]
+
+jobs:
+  fix:
+    if: github.event.head_commit.message != 'Install HESMK Classic Authority logo correctly'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Use vector logo and clean stale assets
+        shell: bash
+        run: |
+          set -euo pipefail
+          sed -i 's/logo-classic-authority\.png/logo-classic-authority.svg/g' index.html
+          rm -f logo-classic-authority.png logo-classic-authority-final.txt logo-web-note.txt _logo-note.txt commit-check.txt test.txt
+          git config user.name 'hesmkrisk'
+          git config user.email 'kahut4777@gmail.com'
+          git add index.html logo-classic-authority.svg
+          git add -u
+          if git diff --cached --quiet; then
+            echo 'No changes to commit.'
+          else
+            git commit -m 'Install HESMK Classic Authority logo correctly'
+            git push origin main
+          fi
+
+      - name: Remove temporary workflow
+        if: always()
+        shell: bash
+        run: |
+          git rm -f .github/workflows/fix-classic-logo.yml || true
+          git config user.name 'hesmkrisk'
+          git config user.email 'kahut4777@gmail.com'
+          if git diff --cached --quiet; then
+            exit 0
+          fi
+          git commit -m 'Remove temporary logo workflow'
+          git push origin main
