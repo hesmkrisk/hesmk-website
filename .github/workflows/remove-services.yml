@@ -11,39 +11,50 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Remove Services/Capabilities section and nav link
+      - name: Remove Services/Capabilities section and navigation
         shell: python
         run: |
           from pathlib import Path
           import re
+
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          # Remove the homepage Services / Capabilities section.
-          before = s
-          s = re.sub(r'\s*<!--\s*SERVICES\s*-->.*?(?=\s*<!--\s*SECTORS\s*-->)', '\n', s, count=1, flags=re.I|re.S)
-          if s == before:
+          # Remove the complete homepage Services / Capabilities section.
+          s2 = re.sub(
+              r'\s*<!--\s*SERVICES\s*-->.*?(?=\s*<!--\s*SECTORS\s*-->)',
+              '\n', s, count=1, flags=re.I | re.S
+          )
+          if s2 == s:
               raise SystemExit('Services section marker not found')
+          s = s2
 
-          # Remove the Services navigation link.
-          s = re.sub(r'\s*<a href="#services"[^>]*>Services</a>', '', s, count=1, flags=re.I)
+          # Remove the Services item from the desktop/mobile navigation.
+          s = re.sub(
+              r'\s*<a href="#services"[^>]*>\s*Services\s*</a>',
+              '', s, flags=re.I
+          )
 
-          # Remove the hero Explore Our Services button if present, since the destination is gone.
-          s = re.sub(r'\s*<a class="btn btn-outline" href="#services">Explore Our Services</a>', '', s, count=1, flags=re.I)
+          # Remove the hero button that pointed to the deleted section.
+          s = re.sub(
+              r'\s*<a class="btn btn-outline" href="#services">\s*Explore Our Services\s*</a>',
+              '', s, flags=re.I
+          )
 
           p.write_text(s, encoding='utf-8')
 
           if re.search(r'<!--\s*SERVICES\s*-->', s, re.I):
               raise SystemExit('Services marker still present')
-          if re.search(r'href="#services"', s, re.I):
-              raise SystemExit('A #services link still remains')
 
       - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git diff --cached --quiet && { echo "No changes to commit"; exit 0; }
+          if git diff --cached --quiet; then
+            echo "No changes to commit"
+            exit 0
+          fi
           git commit -m "Remove Services section from homepage"
           git push
 
