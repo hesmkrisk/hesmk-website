@@ -141,38 +141,21 @@
     }
 
     .brand {
-      display: inline-flex;
-      flex-direction: column;
-      align-items: flex-start;
-      justify-content: center;
-      gap: 4px;
-      color: var(--navy);
-      font-weight: 900;
-      letter-spacing: .04em;
-      width: 210px;
-    }
-    
-    .brand-wordmark {
-      display: inline-block;
-      color: var(--navy);
-      font-size: 1.55rem;
-      line-height: 1;
-      font-weight: 950;
-      letter-spacing: .16em;
-      padding-left: .16em;
+      display: flex;
+      align-items: center;
+      justify-content: flex-start;
+      width: 245px;
     }
 
-    .brand-submark {
-      display: inline-block;
-      width: max-content;
-      color: var(--steel);
-      font-size: .53rem;
-      line-height: 1.15;
-      letter-spacing: .19em;
-      font-weight: 800;
-      border-top: 1px solid var(--accent);
-      padding-top: 4px;
+    .brand-logo {
+      width: 225px;
+      height: auto;
+      max-height: 68px;
+      object-fit: contain;
+      object-position: left center;
+      display: block;
     }
+    
 
     .brand-mark {
       width: 38px;
@@ -850,7 +833,7 @@
 <header class="nav">
   <div class="container nav-inner">
     <a class="brand" href="#home" aria-label="HESMK Integrated Solutions home">
-      <span class="brand-wordmark">HESMK</span><span class="brand-submark">INTEGRATED SOLUTIONS</span>
+      <img class="brand-logo" src="assets/hesmk-classic-authority.png" alt="HESMK Integrated Solutions">
     </a>
 
     <button class="menu-btn" aria-label="Open menu" onclick="toggleMenu()">☰</button>
