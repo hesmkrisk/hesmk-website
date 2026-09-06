@@ -1,0 +1,69 @@
+name: Update Footer Logo
+on:
+  push:
+    paths:
+      - '.github/workflows/update-footer-logo.yml'
+
+jobs:
+  update-footer-logo:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Replace footer logo with Classic Authority wordmark
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          footer_match = re.search(r'<footer\b.*?</footer>', s, flags=re.I | re.S)
+          if not footer_match:
+              raise SystemExit('Footer block not found')
+
+          footer = footer_match.group(0)
+          new_logo = '<img class="footer-logo" src="logo-classic-authority-footer.svg" alt="HESMK Integrated Solutions logo">'
+          footer_new, count = re.subn(r'<img\b[^>]*>', new_logo, footer, count=1, flags=re.I | re.S)
+          if count != 1:
+              raise SystemExit('Footer logo image not found')
+
+          s = s[:footer_match.start()] + footer_new + s[footer_match.end():]
+
+          css = '''\n    .footer-logo {\n      width: 290px;\n      height: auto;\n      max-width: 100%;\n      display: block;\n      margin-bottom: 18px;\n    }\n'''
+          if '.footer-logo {' not in s:
+              marker = '    .footer-brand { margin-bottom: 18px; }\n'
+              if marker not in s:
+                  raise SystemExit('Footer CSS insertion marker not found')
+              s = s.replace(marker, marker + css, 1)
+
+          mobile = '      .footer-logo { width: 245px; }\n\n'
+          if mobile.strip() not in s:
+              marker = '      .footer-top { grid-template-columns: 1fr; gap: 35px; }\n'
+              if marker not in s:
+                  raise SystemExit('Mobile footer CSS insertion marker not found')
+              s = s.replace(marker, marker + mobile, 1)
+
+          p.write_text(s, encoding='utf-8')
+
+          footer_check = re.search(r'<footer\b.*?</footer>', s, flags=re.I | re.S)
+          if not footer_check or 'logo-classic-authority-footer.svg' not in footer_check.group(0):
+              raise SystemExit('Footer logo replacement validation failed')
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && { echo "No changes to commit"; exit 0; }
+          git commit -m "Use Classic Authority logo in footer"
+          git push
+
+      - name: Remove this temporary workflow
+        if: success()
+        run: |
+          git rm .github/workflows/update-footer-logo.yml
+          git commit -m "Remove temporary footer logo workflow"
+          git push
