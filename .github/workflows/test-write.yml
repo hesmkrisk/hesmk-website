@@ -1,9 +1,140 @@
-name: Test Workflow
+name: Fix Risk Cycle Layout
 
 on: push
 
 jobs:
-  test:
+  fix:
+    if: github.event.head_commit.message != 'Arrange risk cycle symmetrically'
     runs-on: ubuntu-latest
+    permissions:
+      contents: write
     steps:
-      - run: echo "HESMK workflow test"
+      - uses: actions/checkout@v4
+      - name: Arrange risk cycle
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          old_css = """    .risk-chain .chain {
+      display: grid;
+      grid-template-columns: repeat(11, minmax(0, 1fr));
+      gap: 8px;
+      align-items: center;
+    }
+
+    .risk-chain .chain span {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .risk-chain .chain span:nth-of-type(5) {
+      grid-column: 1 / span 3;
+    }
+
+    .risk-chain .chain span:nth-of-type(6) {
+      grid-column: 4 / span 2;
+    }
+
+    .risk-chain .chain span:nth-of-type(7) {
+      grid-column: 6 / span 2;
+    }
+
+    .risk-chain .chain span:nth-of-type(8) {
+      grid-column: 8 / span 2;
+    }
+
+    .risk-chain .chain span:nth-of-type(9) {
+      grid-column: 10 / span 2;
+    }
+"""
+          new_css = """    .risk-chain .chain {
+      display: flex;
+      flex-direction: column;
+      gap: 7px;
+      align-items: center;
+    }
+
+    .risk-chain .cycle-row {
+      display: grid;
+      grid-template-columns: minmax(120px, 1fr) 24px minmax(120px, 1fr) 24px minmax(120px, 1fr);
+      gap: 6px;
+      width: 100%;
+      max-width: 690px;
+      align-items: center;
+    }
+
+    .risk-chain .cycle-step {
+      padding: 10px 8px;
+      border: 1px solid rgba(255,255,255,.13);
+      background: rgba(255,255,255,.045);
+      border-radius: 6px;
+      font-size: .74rem;
+      font-weight: 700;
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .risk-chain .cycle-arrow {
+      color: var(--accent-light);
+      font-weight: 800;
+      text-align: center;
+      font-size: .85rem;
+    }
+
+    .risk-chain .cycle-down {
+      color: var(--accent-light);
+      font-weight: 800;
+      font-size: .9rem;
+      line-height: 1;
+      height: 8px;
+      width: 100%;
+      max-width: 690px;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 16%;
+    }
+"""
+          if old_css not in s:
+              raise SystemExit('Old cycle CSS not found')
+          s = s.replace(old_css, new_css, 1)
+
+          old_html = """        <div class=\"chain\">\n  <span>Context</span><b>→</b>\n  <span>Assets</span><b>→</b>\n  <span>Threats</span><b>→</b>\n  <span>Vulnerabilities</span>\n  <span>Consequences</span><b>→</b>\n  <span>Risk</span><b>→</b>\n  <span>Controls</span><b>→</b>\n  <span>Cost</span>\n  <span>Resilience</span>\n</div>"""
+          new_html = """        <div class=\"chain\">\n          <div class=\"cycle-row\">\n            <span class=\"cycle-step\">Context</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Assets</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Threats</span>\n          </div>\n          <div class=\"cycle-down\">↓</div>\n          <div class=\"cycle-row\">\n            <span class=\"cycle-step\">Vulnerabilities</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Consequences</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Risk</span>\n          </div>\n          <div class=\"cycle-down\">↓</div>\n          <div class=\"cycle-row\">\n            <span class=\"cycle-step\">Controls</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Cost</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Resilience</span>\n          </div>\n        </div>"""
+          if old_html not in s:
+              raise SystemExit('Old cycle HTML not found')
+          s = s.replace(old_html, new_html, 1)
+
+          mobile_old = """      .risk-chain .chain {\n        grid-template-columns: 1fr;\n      }\n\n      .risk-chain .chain span,\n      .risk-chain .chain b {\n        grid-column: auto !important;\n      }\n\n      .risk-chain .chain b {\n        text-align: center;\n      }\n"""
+          mobile_new = """      .risk-chain .cycle-row {\n        grid-template-columns: minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr);\n        gap: 5px;\n      }\n\n      .risk-chain .cycle-step {\n        font-size: .68rem;\n        padding: 9px 5px;\n      }\n\n      .risk-chain .cycle-arrow { font-size: .8rem; }\n\n      .risk-chain .cycle-down {\n        padding-right: 16%;\n      }\n"""
+          if mobile_old not in s:
+              raise SystemExit('Old mobile cycle CSS not found')
+          s = s.replace(mobile_old, mobile_new, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Validate
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          s = Path('index.html').read_text(encoding='utf-8')
+          required = ['cycle-row','cycle-step','cycle-arrow','cycle-down','Context','Assets','Threats','Vulnerabilities','Consequences','Risk','Controls','Cost','Resilience']
+          for item in required:
+              if item not in s:
+                  raise SystemExit(f'Missing {item}')
+          PY
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Arrange risk cycle symmetrically"
+          git push
+      - name: Remove temporary workflows
+        if: success()
+        run: |
+          git rm .github/workflows/test-write.yml .github/workflows/fix-risk-cycle-layout.yml
+          git commit -m "Remove temporary layout workflows"
+          git push
