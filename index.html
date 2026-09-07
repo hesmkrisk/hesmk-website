@@ -321,6 +321,38 @@
 
     .chain b { color: var(--accent-light); }
 
+    .risk-chain .chain {
+      display: grid;
+      grid-template-columns: repeat(11, minmax(0, 1fr));
+      gap: 8px;
+      align-items: center;
+    }
+
+    .risk-chain .chain span {
+      text-align: center;
+      white-space: nowrap;
+    }
+
+    .risk-chain .chain span:nth-of-type(5) {
+      grid-column: 1 / span 3;
+    }
+
+    .risk-chain .chain span:nth-of-type(6) {
+      grid-column: 4 / span 2;
+    }
+
+    .risk-chain .chain span:nth-of-type(7) {
+      grid-column: 6 / span 2;
+    }
+
+    .risk-chain .chain span:nth-of-type(8) {
+      grid-column: 8 / span 2;
+    }
+
+    .risk-chain .chain span:nth-of-type(9) {
+      grid-column: 10 / span 2;
+    }
+
     /* METHODOLOGY */
     .dark-section {
       background: var(--navy);
@@ -825,6 +857,19 @@
 
       .service-list { grid-template-columns: 1fr; }
 
+      .risk-chain .chain {
+        grid-template-columns: 1fr;
+      }
+
+      .risk-chain .chain span,
+      .risk-chain .chain b {
+        grid-column: auto !important;
+      }
+
+      .risk-chain .chain b {
+        text-align: center;
+      }
+
       .field.full { grid-column: auto; }
       .form-submit { grid-column: auto; flex-direction: column; align-items: flex-start; }
 
@@ -898,15 +943,18 @@
       </div>
 
       <div class="risk-chain reveal">
-        <h3>From Security Assumptions to Risk-Informed Decisions</h3>
+        <h3>Risk-Informed Security Cycle</h3>
         <div class="chain">
-          <span>Threat</span><b>→</b>
-          <span>Vulnerability</span><b>→</b>
-          <span>Consequence</span><b>→</b>
-          <span>Risk</span><b>→</b>
-          <span>Controls</span><b>→</b>
-          <span>Resilience</span>
-        </div>
+  <span>Context</span><b>→</b>
+  <span>Assets</span><b>→</b>
+  <span>Threats</span><b>→</b>
+  <span>Vulnerabilities</span>
+  <span>Consequences</span><b>→</b>
+  <span>Risk</span><b>→</b>
+  <span>Controls</span><b>→</b>
+  <span>Cost</span>
+  <span>Resilience</span>
+</div>
       </div>
     </div>
   </section>
