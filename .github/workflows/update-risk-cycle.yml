@@ -1,0 +1,85 @@
+name: Refine Risk-Informed Cycle
+on:
+  push:
+    paths:
+      - '.github/workflows/update-risk-cycle.yml'
+
+jobs:
+  refine-risk-cycle:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Update risk cycle presentation
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          old_heading = 'From Security Assumptions to Risk-Informed Decisions'
+          new_heading = 'Risk-Informed Security Cycle'
+          if old_heading not in s:
+              raise SystemExit('Risk chain heading not found')
+          s = s.replace(old_heading, new_heading, 1)
+
+          pattern = r'(<div class="risk-chain reveal">\s*<h3>Risk-Informed Security Cycle</h3>\s*)<div class="chain">.*?</div>(\s*</div>)'
+          replacement = r'''\1<div class="chain">
+            <span>Context</span><b>→</b>
+            <span>Assets</span><b>→</b>
+            <span>Threats</span><b>→</b>
+            <span>Vulnerabilities</span>
+            <span>Consequences</span><b>→</b>
+            <span>Risk</span><b>→</b>
+            <span>Controls</span><b>→</b>
+            <span>Cost</span>
+            <span>Resilience</span>
+          </div>\2'''
+          s2, n = re.subn(pattern, replacement, s, count=1, flags=re.S)
+          if n != 1:
+              raise SystemExit('Risk chain block not found')
+          s = s2
+
+          css_anchor = '    .chain b { color: var(--accent-light); }\n'
+          if css_anchor not in s:
+              raise SystemExit('Chain CSS anchor not found')
+
+          css = '''\n    .risk-chain .chain {\n      display: grid;\n      grid-template-columns: repeat(11, minmax(0, 1fr));\n      gap: 8px;\n      align-items: center;\n    }\n\n    .risk-chain .chain span {\n      text-align: center;\n      white-space: nowrap;\n    }\n\n    .risk-chain .chain span:nth-of-type(5) {\n      grid-column: 1 / span 3;\n    }\n\n    .risk-chain .chain span:nth-of-type(6) {\n      grid-column: 4 / span 2;\n    }\n\n    .risk-chain .chain span:nth-of-type(7) {\n      grid-column: 6 / span 2;\n    }\n\n    .risk-chain .chain span:nth-of-type(8) {\n      grid-column: 8 / span 2;\n    }\n\n    .risk-chain .chain span:nth-of-type(9) {\n      grid-column: 10 / span 2;\n    }\n'''
+          s = s.replace(css_anchor, css_anchor + css, 1)
+
+          responsive_anchor = '      .service-list { grid-template-columns: 1fr; }\n'
+          responsive = '''\n      .risk-chain .chain {\n        grid-template-columns: 1fr;\n      }\n\n      .risk-chain .chain span,\n      .risk-chain .chain b {\n        grid-column: auto !important;\n      }\n\n      .risk-chain .chain b {\n        text-align: center;\n      }\n'''
+          if responsive_anchor not in s:
+              raise SystemExit('Responsive CSS anchor not found')
+          s = s.replace(responsive_anchor, responsive_anchor + responsive, 1)
+
+          p.write_text(s, encoding='utf-8')
+
+      - name: Validate
+        shell: python
+        run: |
+          from pathlib import Path
+          import re
+          s = Path('index.html').read_text(encoding='utf-8')
+          required = ['Risk-Informed Security Cycle','Context','Assets','Threats','Vulnerabilities','Consequences','Risk','Controls','Cost','Resilience']
+          for item in required:
+              if item not in s:
+                  raise SystemExit(f'Missing required item: {item}')
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Refine risk-informed security cycle"
+          git push
+
+      - name: Remove temporary workflow
+        if: success()
+        run: |
+          git rm .github/workflows/update-risk-cycle.yml
+          git commit -m "Remove temporary risk cycle workflow"
+          git push
