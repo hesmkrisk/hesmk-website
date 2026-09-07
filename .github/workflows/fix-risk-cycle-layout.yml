@@ -1,4 +1,5 @@
 name: Fix Risk Cycle Layout
+
 on:
   push:
     paths:
@@ -11,16 +12,14 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Arrange risk cycle symmetrically
+      - name: Arrange cycle
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
-          import re
-
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          old_css = '''    .risk-chain .chain {
+          old_css = """    .risk-chain .chain {
       display: grid;
       grid-template-columns: repeat(11, minmax(0, 1fr));
       gap: 8px;
@@ -51,8 +50,8 @@ jobs:
     .risk-chain .chain span:nth-of-type(9) {
       grid-column: 10 / span 2;
     }
-'''
-          new_css = '''    .risk-chain .chain {
+"""
+          new_css = """    .risk-chain .chain {
       display: flex;
       flex-direction: column;
       gap: 7px;
@@ -99,70 +98,41 @@ jobs:
       align-items: center;
       padding-right: 16%;
     }
-'''
+"""
           if old_css not in s:
               raise SystemExit('old CSS not found')
           s = s.replace(old_css, new_css, 1)
 
-          old_html = '''        <div class="chain">
-  <span>Context</span><b>→</b>
-  <span>Assets</span><b>→</b>
-  <span>Threats</span><b>→</b>
-  <span>Vulnerabilities</span>
-  <span>Consequences</span><b>→</b>
-  <span>Risk</span><b>→</b>
-  <span>Controls</span><b>→</b>
-  <span>Cost</span>
-  <span>Resilience</span>
-</div>'''
-          new_html = '''        <div class="chain">
-          <div class="cycle-row">
-            <span class="cycle-step">Context</span><span class="cycle-arrow">→</span>
-            <span class="cycle-step">Assets</span><span class="cycle-arrow">→</span>
-            <span class="cycle-step">Threats</span>
-          </div>
-          <div class="cycle-down">↓</div>
-          <div class="cycle-row">
-            <span class="cycle-step">Vulnerabilities</span><span class="cycle-arrow">→</span>
-            <span class="cycle-step">Consequences</span><span class="cycle-arrow">→</span>
-            <span class="cycle-step">Risk</span>
-          </div>
-          <div class="cycle-down">↓</div>
-          <div class="cycle-row">
-            <span class="cycle-step">Controls</span><span class="cycle-arrow">→</span>
-            <span class="cycle-step">Cost</span><span class="cycle-arrow">→</span>
-            <span class="cycle-step">Resilience</span>
-          </div>
-        </div>'''
+          old_html = """        <div class=\"chain\">\n  <span>Context</span><b>→</b>\n  <span>Assets</span><b>→</b>\n  <span>Threats</span><b>→</b>\n  <span>Vulnerabilities</span>\n  <span>Consequences</span><b>→</b>\n  <span>Risk</span><b>→</b>\n  <span>Controls</span><b>→</b>\n  <span>Cost</span>\n  <span>Resilience</span>\n</div>"""
+          new_html = """        <div class=\"chain\">\n          <div class=\"cycle-row\">\n            <span class=\"cycle-step\">Context</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Assets</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Threats</span>\n          </div>\n          <div class=\"cycle-down\">↓</div>\n          <div class=\"cycle-row\">\n            <span class=\"cycle-step\">Vulnerabilities</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Consequences</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Risk</span>\n          </div>\n          <div class=\"cycle-down\">↓</div>\n          <div class=\"cycle-row\">\n            <span class=\"cycle-step\">Controls</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Cost</span><span class=\"cycle-arrow\">→</span>\n            <span class=\"cycle-step\">Resilience</span>\n          </div>\n        </div>"""
           if old_html not in s:
               raise SystemExit('old HTML not found')
           s = s.replace(old_html, new_html, 1)
 
+          mobile_old = """      .risk-chain .chain {\n        grid-template-columns: 1fr;\n      }\n\n      .risk-chain .chain span,\n      .risk-chain .chain b {\n        grid-column: auto !important;\n      }\n\n      .risk-chain .chain b {\n        text-align: center;\n      }\n"""
+          mobile_new = """      .risk-chain .cycle-row {\n        grid-template-columns: minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr);\n        gap: 5px;\n      }\n\n      .risk-chain .cycle-step {\n        font-size: .68rem;\n        padding: 9px 5px;\n      }\n\n      .risk-chain .cycle-arrow { font-size: .8rem; }\n\n      .risk-chain .cycle-down {\n        padding-right: 16%;\n      }\n"""
+          if mobile_old not in s:
+              raise SystemExit('mobile CSS not found')
+          s = s.replace(mobile_old, mobile_new, 1)
+
           p.write_text(s, encoding='utf-8')
           PY
-
       - name: Validate
         run: |
-          python - <<'PY'
+          python3 - <<'PY'
           from pathlib import Path
           s = Path('index.html').read_text(encoding='utf-8')
-          required = ['Risk-Informed Security Cycle','Context','Assets','Threats','Vulnerabilities','Consequences','Risk','Controls','Cost','Resilience','cycle-row','cycle-down']
-          for item in required:
+          for item in ['cycle-row','cycle-step','cycle-down','Context','Assets','Threats','Vulnerabilities','Consequences','Risk','Controls','Cost','Resilience']:
               if item not in s:
-                  raise SystemExit(f'Missing: {item}')
+                  raise SystemExit(f'missing {item}')
           PY
-
-      - name: Commit changes
+      - name: Commit and cleanup
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
-          git commit -m "Arrange risk-informed cycle symmetrically"
+          git commit -m "Arrange risk cycle symmetrically"
           git push
-
-      - name: Remove workflow
-        if: success()
-        run: |
           git rm .github/workflows/fix-risk-cycle-layout.yml
           git commit -m "Remove temporary cycle layout workflow"
           git push
