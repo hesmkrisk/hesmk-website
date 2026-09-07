@@ -1,0 +1,101 @@
+name: Fix Risk Cycle Symmetry
+
+on: push
+
+jobs:
+  fix:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@v4
+      - name: Add symmetric styling
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+          css = r'''
+              /* RISK CYCLE SYMMETRIC OVERRIDE */
+              .risk-chain .chain {
+                display: grid !important;
+                grid-template-columns: minmax(0,1fr) 22px minmax(0,1fr) 22px minmax(0,1fr) !important;
+                column-gap: 6px !important;
+                row-gap: 16px !important;
+                align-items: center !important;
+                width: 100%;
+              }
+              .risk-chain .chain span {
+                position: relative;
+                grid-column: auto !important;
+                grid-row: auto !important;
+                text-align: center !important;
+                white-space: nowrap !important;
+                padding: 10px 8px;
+                font-size: .74rem;
+              }
+              .risk-chain .chain b { display: none !important; }
+              .risk-chain .chain span:nth-of-type(1)::after,
+              .risk-chain .chain span:nth-of-type(2)::after,
+              .risk-chain .chain span:nth-of-type(4)::after,
+              .risk-chain .chain span:nth-of-type(5)::after,
+              .risk-chain .chain span:nth-of-type(7)::after,
+              .risk-chain .chain span:nth-of-type(8)::after {
+                content: "→";
+                position: absolute;
+                right: -19px;
+                top: 50%;
+                transform: translateY(-50%);
+                color: var(--accent-light);
+                font-weight: 800;
+                font-size: .82rem;
+              }
+              .risk-chain .chain span:nth-of-type(3)::after,
+              .risk-chain .chain span:nth-of-type(6)::after {
+                content: "↓";
+                position: absolute;
+                left: 50%;
+                top: calc(100% + 4px);
+                transform: translateX(-50%);
+                color: var(--accent-light);
+                font-weight: 800;
+                font-size: .86rem;
+              }
+              @media (max-width: 650px) {
+                .risk-chain .chain {
+                  grid-template-columns: minmax(0,1fr) 16px minmax(0,1fr) 16px minmax(0,1fr) !important;
+                  column-gap: 4px !important;
+                  row-gap: 14px !important;
+                }
+                .risk-chain .chain span { font-size: .66rem; padding: 8px 4px; }
+                .risk-chain .chain span:nth-of-type(1)::after,
+                .risk-chain .chain span:nth-of-type(2)::after,
+                .risk-chain .chain span:nth-of-type(4)::after,
+                .risk-chain .chain span:nth-of-type(5)::after,
+                .risk-chain .chain span:nth-of-type(7)::after,
+                .risk-chain .chain span:nth-of-type(8)::after {
+                  right: -14px;
+                  font-size: .74rem;
+                }
+              }
+          '''
+          marker = '</style>'
+          if marker not in s:
+              raise SystemExit('style marker not found')
+          s = s.replace(marker, css + '\n  </style>', 1)
+          p.write_text(s, encoding='utf-8')
+          PY
+      - name: Validate
+        run: |
+          grep -q 'RISK CYCLE SYMMETRIC OVERRIDE' index.html
+          grep -q 'Risk-Informed Security Cycle' index.html
+      - name: Commit and cleanup
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Arrange risk-informed cycle symmetrically"
+          git push
+          git rm .github/workflows/fix-cycle-symmetry.yml
+          git commit -m "Remove temporary cycle workflow"
+          git push
