@@ -1,9 +1,6 @@
 name: Fix Risk Cycle Layout
 
-on:
-  push:
-    paths:
-      - '.github/workflows/test-write.yml'
+on: push
 
 jobs:
   fix:
@@ -12,7 +9,7 @@ jobs:
       contents: write
     steps:
       - uses: actions/checkout@v4
-      - name: Arrange risk cycle symmetrically
+      - name: Arrange cycle
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -117,23 +114,18 @@ jobs:
 
           p.write_text(s, encoding='utf-8')
           PY
-      - name: Validate
+      - name: Validate and commit
         run: |
           python3 - <<'PY'
           from pathlib import Path
           s = Path('index.html').read_text(encoding='utf-8')
-          required = ['Risk-Informed Security Cycle','Context','Assets','Threats','Vulnerabilities','Consequences','Risk','Controls','Cost','Resilience','cycle-row','cycle-step','cycle-arrow','cycle-down']
-          for item in required:
+          for item in ['Risk-Informed Security Cycle','Context','Assets','Threats','Vulnerabilities','Consequences','Risk','Controls','Cost','Resilience','cycle-row','cycle-step','cycle-arrow','cycle-down']:
               if item not in s:
                   raise SystemExit(f'Missing {item}')
           PY
-      - name: Commit and cleanup
-        run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
-          git commit -m "Arrange risk cycle symmetrically"
-          git push
           git rm .github/workflows/test-write.yml .github/workflows/fix-risk-cycle-layout.yml
-          git commit -m "Remove temporary cycle workflows"
+          git add index.html
+          git commit -m "Arrange risk-informed cycle symmetrically"
           git push
