@@ -12,14 +12,15 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - name: Arrange risk cycle symmetrically
-        shell: python
         run: |
+          python - <<'PY'
           from pathlib import Path
           import re
+
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
-          old_css = r'''    .risk-chain .chain {
+          old_css = '''    .risk-chain .chain {
       display: grid;
       grid-template-columns: repeat(11, minmax(0, 1fr));
       gap: 8px;
@@ -51,7 +52,7 @@ jobs:
       grid-column: 10 / span 2;
     }
 '''
-          new_css = r'''    .risk-chain .chain {
+          new_css = '''    .risk-chain .chain {
       display: flex;
       flex-direction: column;
       gap: 7px;
@@ -60,15 +61,15 @@ jobs:
 
     .risk-chain .cycle-row {
       display: grid;
-      grid-template-columns: minmax(125px, 1fr) 28px minmax(125px, 1fr) 28px minmax(125px, 1fr);
-      gap: 7px;
+      grid-template-columns: minmax(120px, 1fr) 24px minmax(120px, 1fr) 24px minmax(120px, 1fr);
+      gap: 6px;
       width: 100%;
       max-width: 690px;
       align-items: center;
     }
 
     .risk-chain .cycle-step {
-      padding: 10px 11px;
+      padding: 10px 8px;
       border: 1px solid rgba(255,255,255,.13);
       background: rgba(255,255,255,.045);
       border-radius: 6px;
@@ -82,28 +83,28 @@ jobs:
       color: var(--accent-light);
       font-weight: 800;
       text-align: center;
-      font-size: .9rem;
+      font-size: .85rem;
     }
 
     .risk-chain .cycle-down {
       color: var(--accent-light);
       font-weight: 800;
+      font-size: .9rem;
       line-height: 1;
-      font-size: .95rem;
-      height: 9px;
-      display: flex;
-      align-items: center;
-      justify-content: flex-end;
+      height: 8px;
       width: 100%;
       max-width: 690px;
-      padding-right: 16.5%;
+      display: flex;
+      justify-content: flex-end;
+      align-items: center;
+      padding-right: 16%;
     }
 '''
           if old_css not in s:
-              raise SystemExit('Old risk cycle CSS not found')
+              raise SystemExit('old CSS not found')
           s = s.replace(old_css, new_css, 1)
 
-          old_html = r'''        <div class="chain">
+          old_html = '''        <div class="chain">
   <span>Context</span><b>→</b>
   <span>Assets</span><b>→</b>
   <span>Threats</span><b>→</b>
@@ -114,7 +115,7 @@ jobs:
   <span>Cost</span>
   <span>Resilience</span>
 </div>'''
-          new_html = r'''        <div class="chain">
+          new_html = '''        <div class="chain">
           <div class="cycle-row">
             <span class="cycle-step">Context</span><span class="cycle-arrow">→</span>
             <span class="cycle-step">Assets</span><span class="cycle-arrow">→</span>
@@ -134,49 +135,34 @@ jobs:
           </div>
         </div>'''
           if old_html not in s:
-              raise SystemExit('Old risk cycle HTML not found')
+              raise SystemExit('old HTML not found')
           s = s.replace(old_html, new_html, 1)
 
-          mobile_anchor = '      .risk-chain .chain {\n        grid-template-columns: 1fr;\n      }\n\n      .risk-chain .chain span,\n      .risk-chain .chain b {\n        grid-column: auto !important;\n      }\n\n      .risk-chain .chain b {\n        text-align: center;\n      }\n'
-          mobile_new = r'''      .risk-chain .cycle-row {
-        grid-template-columns: minmax(0,1fr) 18px minmax(0,1fr) 18px minmax(0,1fr);
-        gap: 5px;
-      }
-
-      .risk-chain .cycle-step {
-        font-size: .68rem;
-        padding: 9px 5px;
-      }
-
-      .risk-chain .cycle-arrow { font-size: .8rem; }
-
-      .risk-chain .cycle-down {
-        padding-right: 16%;
-      }
-'''
-          if mobile_anchor not in s:
-              raise SystemExit('Mobile risk cycle CSS not found')
-          s = s.replace(mobile_anchor, mobile_new, 1)
-
           p.write_text(s, encoding='utf-8')
+          PY
 
       - name: Validate
-        shell: python
         run: |
+          python - <<'PY'
           from pathlib import Path
           s = Path('index.html').read_text(encoding='utf-8')
           required = ['Risk-Informed Security Cycle','Context','Assets','Threats','Vulnerabilities','Consequences','Risk','Controls','Cost','Resilience','cycle-row','cycle-down']
           for item in required:
               if item not in s:
                   raise SystemExit(f'Missing: {item}')
+          PY
 
-      - name: Commit and cleanup
+      - name: Commit changes
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git commit -m "Arrange risk-informed cycle symmetrically"
           git push
+
+      - name: Remove workflow
+        if: success()
+        run: |
           git rm .github/workflows/fix-risk-cycle-layout.yml
           git commit -m "Remove temporary cycle layout workflow"
           git push
