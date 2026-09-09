@@ -1,0 +1,136 @@
+name: Apply HESMK Capabilities
+
+on:
+  push:
+    paths:
+      - '.github/workflows/apply-capabilities.yml'
+
+jobs:
+  update-site:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add capabilities section
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
+
+          if 'id="capabilities"' in html:
+              print('Capabilities already present.')
+              raise SystemExit(0)
+
+          css = '''
+          /* HESMK CAPABILITIES */
+          .capabilities-section{background:var(--white);}
+          .capabilities-head{display:grid;grid-template-columns:1.25fr .75fr;gap:56px;align-items:end;margin-bottom:26px;}
+          .capabilities-head h2{margin:8px 0 4px;color:var(--navy);}
+          .capabilities-subtitle{font-size:1.12rem;color:#46647d;margin:0;}
+          .capabilities-intro{max-width:430px;color:#46647d;margin:0 0 4px;font-size:.98rem;}
+          .capabilities-table{border:1px solid rgba(8,24,39,.12);border-radius:16px;overflow:hidden;box-shadow:0 16px 38px rgba(8,24,39,.08);}
+          .cap-row{display:grid;grid-template-columns:1.08fr 1fr .98fr;min-height:68px;border-bottom:1px solid rgba(8,24,39,.10);}
+          .cap-row:last-child{border-bottom:0;}
+          .cap-cell{padding:15px 18px;display:flex;align-items:center;gap:13px;background:#fff;color:#46647d;font-size:.94rem;}
+          .cap-cell.capability{font-weight:750;color:#123f61;}
+          .cap-cell.outcome{color:#526f84;}
+          .cap-icon{width:38px;height:38px;min-width:38px;border-radius:50%;display:grid;place-items:center;background:#f7efe2;color:var(--accent);font-size:18px;font-weight:700;border:1px solid rgba(184,148,85,.18);}
+          .cap-header .cap-cell{min-height:50px;background:var(--navy-2);color:#fff;text-transform:uppercase;letter-spacing:.16em;font-family:Georgia,serif;font-size:.72rem;font-weight:700;}
+          .cap-header .cap-cell:nth-child(2){background:#344d60;}
+          .cap-header .cap-cell:nth-child(3){background:var(--accent);}
+          .cap-footer{display:flex;justify-content:center;gap:30px;align-items:center;padding:13px 18px;background:var(--navy);color:#fff;text-transform:uppercase;letter-spacing:.18em;font-family:Georgia,serif;font-size:.72rem;font-weight:700;}
+          .cap-footer span{display:inline-flex;align-items:center;gap:30px;}
+          .cap-footer span:not(:last-child)::after{content:'|';color:var(--accent);}
+          @media(max-width:900px){.capabilities-head{grid-template-columns:1fr;gap:16px}.cap-row{grid-template-columns:1fr}.cap-header{display:none}.cap-cell{border-bottom:1px solid rgba(8,24,39,.07)}.cap-cell.capability{background:#f8fafb}.cap-footer{flex-wrap:wrap;gap:10px 22px}.cap-footer span{gap:22px}.cap-footer span:not(:last-child)::after{display:none}}
+          @media(max-width:560px){.cap-cell{padding:13px 14px;font-size:.9rem}.cap-icon{width:34px;height:34px;min-width:34px}.cap-footer{font-size:.65rem;letter-spacing:.12em}}
+          '''
+
+          section = '''
+          <!-- CAPABILITIES -->
+          <section class="section capabilities-section" id="capabilities">
+            <div class="container">
+              <div class="capabilities-head">
+                <div>
+                  <div class="eyebrow">Our Capabilities</div>
+                  <h2>HESMK Capabilities</h2>
+                  <p class="capabilities-subtitle">From Security Risk to Organizational Resilience</p>
+                </div>
+                <p class="capabilities-intro">We help organizations understand their security risks, design proportionate solutions and build long-term resilience.</p>
+              </div>
+              <div class="capabilities-table">
+                <div class="cap-row cap-header">
+                  <div class="cap-cell">Organizational Need</div>
+                  <div class="cap-cell">HESMK Capability</div>
+                  <div class="cap-cell">Management Outcome</div>
+                </div>
+                <div class="cap-row">
+                  <div class="cap-cell"><span class="cap-icon">⌕</span>Understand security exposure</div>
+                  <div class="cap-cell capability">Security Risk Assessment</div>
+                  <div class="cap-cell outcome">Risk visibility &amp; priorities</div>
+                </div>
+                <div class="cap-row">
+                  <div class="cap-cell"><span class="cap-icon">♟</span>Protect people &amp; assets</div>
+                  <div class="cap-cell capability">Protective Security</div>
+                  <div class="cap-cell outcome">Proportionate protection</div>
+                </div>
+                <div class="cap-row">
+                  <div class="cap-cell"><span class="cap-icon">!</span>Anticipate hostile threats</div>
+                  <div class="cap-cell capability">Threat &amp; Counter-Terrorism Advisory</div>
+                  <div class="cap-cell outcome">Reduced vulnerability</div>
+                </div>
+                <div class="cap-row">
+                  <div class="cap-cell"><span class="cap-icon">▥</span>Secure operations &amp; facilities</div>
+                  <div class="cap-cell capability">Physical Security</div>
+                  <div class="cap-cell outcome">Improved security effectiveness</div>
+                </div>
+                <div class="cap-row">
+                  <div class="cap-cell"><span class="cap-icon">⚙</span>Prepare for disruption</div>
+                  <div class="cap-cell capability">Crisis &amp; Emergency Management</div>
+                  <div class="cap-cell outcome">Faster response</div>
+                </div>
+                <div class="cap-row">
+                  <div class="cap-cell"><span class="cap-icon">▥</span>Maintain critical operations</div>
+                  <div class="cap-cell capability">Business Continuity &amp; Resilience</div>
+                  <div class="cap-cell outcome">Organizational resilience</div>
+                </div>
+                <div class="cap-row">
+                  <div class="cap-cell"><span class="cap-icon">✓</span>Support leadership decisions</div>
+                  <div class="cap-cell capability">Security Governance &amp; Risk Advisory</div>
+                  <div class="cap-cell outcome">Better investment decisions</div>
+                </div>
+                <div class="cap-footer">
+                  <span>Risk Informed</span><span>Proportionate</span><span>Practical</span><span>Measurable</span>
+                </div>
+              </div>
+            </div>
+          </section>
+          '''
+
+          pos = html.rfind('</style>')
+          if pos < 0:
+              raise SystemExit('Closing style tag not found')
+          html = html[:pos] + css + '\n' + html[pos:]
+
+          marker = '<!-- CONTACT -->'
+          if marker not in html:
+              raise SystemExit('Contact marker not found')
+          html = html.replace(marker, section + '\n\n' + marker, 1)
+          path.write_text(html, encoding='utf-8')
+          print('Capabilities section added after Sector Solutions.')
+          PY
+
+      - name: Commit site update and remove workflow
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add HESMK capabilities section" || true
+          rm -f .github/workflows/apply-capabilities.yml
+          git add .github/workflows/apply-capabilities.yml
+          git commit -m "Remove temporary capabilities workflow" || true
+          git push
