@@ -1138,6 +1138,65 @@ footer{background:var(--navy)!important;}
 @media(max-width:650px){.credentials-section{padding:56px 0}.credential-cards{grid-template-columns:1fr 1fr;gap:10px}.credential-card{min-height:280px;padding:14px 12px}.credential-mark{height:92px}.credential-mark.ssg img{width:72px!important;height:82px!important}.credential-card h4{font-size:.86rem;min-height:46px}.credential-card p{font-size:.74rem}.credentials-name h3{font-size:2.3rem!important}.credentials-role{font-size:.7rem}}
 @media(max-width:430px){.credential-cards{grid-template-columns:1fr}.credential-card{min-height:auto}}
 
+
+
+/* APPROVED CREDENTIALS MOCKUP — FINAL SYMMETRICAL LAYOUT */
+.credentials-section{background:var(--white);padding:60px 0 54px;}
+.credentials-wrap{width:min(92%,var(--max));margin:auto;}
+.credentials-eyebrow{margin:0 0 22px;}
+.credentials-header{display:grid;grid-template-columns:1.05fr 1.5fr .72fr;gap:42px;align-items:start;}
+.credentials-heading{padding:10px 40px 0 0;border-right:1px solid rgba(8,24,39,.18);}
+.credentials-heading h2{font-family:Georgia,serif;color:var(--navy);font-size:clamp(3rem,4.65vw,4.25rem);line-height:1.03;letter-spacing:-.035em;margin:0;}
+.credentials-heading-rule{width:42px;height:2px;background:var(--accent);margin-top:28px;}
+.credentials-profile{padding-top:4px;}
+.credentials-profile h3{font-family:Georgia,serif;color:var(--navy);font-size:clamp(2.75rem,4vw,4rem);line-height:1;margin:0 0 9px;letter-spacing:-.035em;}
+.credentials-role{font-family:Georgia,serif;text-transform:uppercase;letter-spacing:.19em;color:var(--accent);font-size:.79rem;font-weight:700;}
+.credentials-profile-rule{width:42px;height:2px;background:var(--accent);margin:16px 0 13px;}
+.credentials-former{font-family:Georgia,serif;color:var(--navy);font-size:1.15rem;}
+.credentials-quote{padding:5px 0 0 10px;color:#294968;}
+.credentials-quote .quote-mark{font-family:Georgia,serif;color:var(--accent);font-size:5rem;line-height:.4;margin:0 0 18px;}
+.credentials-quote p{font-family:Georgia,serif;font-size:1.14rem;font-style:italic;line-height:1.42;margin:0;}
+.credentials-quote .credentials-profile-rule{margin-top:18px;}
+.credentials-body{display:grid;grid-template-columns:minmax(260px,.82fr) minmax(0,2.18fr);gap:36px;align-items:start;margin-top:24px;}
+.credentials-copy{padding-right:12px;}
+.credentials-copy .credential-rule{margin:0 0 18px;}
+.credentials-copy p{max-width:405px;color:#2e5674;font-size:.98rem;line-height:1.6;margin:0;}
+.credential-cards{display:grid;grid-template-columns:repeat(5,minmax(0,1fr));gap:10px;align-items:stretch;}
+.credential-card{height:318px;min-height:318px;padding:16px 13px;background:#fff;border:1px solid rgba(8,24,39,.12);border-radius:12px;box-shadow:0 10px 25px rgba(8,24,39,.055);display:flex;flex-direction:column;overflow:hidden;}
+.credential-mark{height:100px;flex:0 0 100px;width:100%;display:flex;align-items:center;justify-content:center;margin-bottom:12px;color:var(--navy);font-family:Georgia,serif;font-weight:800;}
+.credential-mark.ssg img{display:block;width:82px;height:92px;object-fit:contain;}
+.credential-mark.wordmark{border:1px solid rgba(184,148,85,.22);background:#faf8f3;border-radius:8px;flex-direction:column;text-align:center;line-height:1.05;font-size:1.35rem;letter-spacing:.04em;}
+.credential-mark.wordmark small{display:block;font-family:Inter,ui-sans-serif,sans-serif;font-size:.5rem;letter-spacing:.09em;color:#607080;margin-top:9px;font-weight:700;}
+.credential-card h4{font-family:Georgia,serif;color:var(--navy);font-size:.91rem;line-height:1.18;text-align:center;margin:0 0 7px;min-height:45px;display:flex;align-items:center;justify-content:center;}
+.credential-card .credential-rule{width:42px;height:2px;background:var(--accent);margin:5px auto 12px;flex:0 0 auto;}
+.credential-card p{font-size:.76rem;color:#607080;line-height:1.5;margin:0;}
+.credentials-attribution{display:none!important;}
+
+@media(max-width:1100px){
+  .credentials-header{grid-template-columns:1fr 1.25fr;gap:28px;}
+  .credentials-quote{grid-column:1 / -1;display:flex;align-items:flex-start;gap:14px;padding:0;}
+  .credentials-quote .quote-mark{margin:0;}
+  .credentials-quote p{padding-top:7px;}
+  .credentials-body{grid-template-columns:1fr;gap:24px;}
+  .credentials-copy p{max-width:760px;}
+  .credential-cards{grid-template-columns:repeat(3,minmax(0,1fr));}
+}
+@media(max-width:700px){
+  .credentials-section{padding:52px 0 44px;}
+  .credentials-header{grid-template-columns:1fr;gap:18px;}
+  .credentials-heading{border-right:0;border-bottom:1px solid rgba(8,24,39,.16);padding:0 0 22px;}
+  .credentials-heading h2{font-size:2.7rem;}
+  .credentials-profile{padding-top:0;}
+  .credentials-profile h3{font-size:2.75rem;}
+  .credentials-quote{grid-column:auto;}
+  .credentials-body{margin-top:24px;}
+  .credential-cards{grid-template-columns:1fr 1fr;}
+}
+@media(max-width:440px){
+  .credential-cards{grid-template-columns:1fr;}
+  .credential-card{height:auto;min-height:280px;}
+}
+
 </style>
 </head>
 
@@ -1221,52 +1280,66 @@ footer{background:var(--navy)!important;}
   
 <!-- LEADERSHIP & PROFESSIONAL CREDENTIALS -->
 <section class="section credentials-section" id="credentials">
-  <div class="container credentials-grid">
-    <div class="credentials-lead reveal">
-      <div class="eyebrow">Leadership &amp; Professional Credentials</div>
-      <h2>Experience.<span>Certification.</span><span>Global Perspective.</span></h2>
-      <div class="credential-rule"></div>
-      <p>HESMK is led by a security and risk professional with operational experience in hostile environments and internationally recognized professional credentials, combining real-world insight with global best practices.</p>
-    </div>
+  <div class="container credentials-wrap">
+    <div class="credentials-eyebrow eyebrow">Leadership &amp; Professional Credentials</div>
 
-    <div class="reveal">
-      <div class="credentials-name">
+    <div class="credentials-header">
+      <div class="credentials-heading">
+        <h2>Experience.<br>Certification.<br>Global Perspective.</h2>
+        <div class="credentials-heading-rule"></div>
+      </div>
+
+      <div class="credentials-profile">
         <h3>Khalid Habib</h3>
         <div class="credentials-role">Security &amp; Risk Professional</div>
+        <div class="credentials-profile-rule"></div>
         <div class="credentials-former">Former SSG Officer</div>
+      </div>
+
+      <div class="credentials-quote">
+        <div class="quote-mark">“</div>
+        <p>Turning security<br>challenges into<br>resilient opportunities.</p>
+        <div class="credentials-profile-rule"></div>
+      </div>
+    </div>
+
+    <div class="credentials-body">
+      <div class="credentials-copy">
+        <div class="credential-rule"></div>
+        <p>HESMK is led by a security and risk professional with operational experience in hostile environments and internationally recognized professional credentials, combining real-world insight with global best practices.</p>
       </div>
 
       <div class="credential-cards">
         <article class="credential-card">
-          <div class="credential-mark ssg"><img src="ssg-insignia.svg" alt="SSG insignia"></div>
+          <div class="credential-mark ssg"><img src="ssg.png" alt="SSG insignia"></div>
           <h4>Former SSG Officer</h4>
           <div class="credential-rule"></div>
           <p>Operational experience in hostile environments and counter-terrorism operations.</p>
         </article>
 
         <article class="credential-card">
-          <div class="credential-mark wordmark">CPP<small>ASIS INTERNATIONAL</small></div>
+          <div class="credential-mark wordmark cpp">CPP<small>ASIS INTERNATIONAL</small></div>
           <h4>Certified Protection Professional (CPP)</h4>
           <div class="credential-rule"></div>
           <p>Professional protection credential issued by ASIS International.</p>
         </article>
 
         <article class="credential-card">
-          <div class="credential-mark wordmark">ISMI · CSMP<small>LEVEL 6</small></div>
+          <div class="credential-mark wordmark csmp">ISMI · CSMP<small>LEVEL 6</small></div>
           <h4>Certified Security Management Professional Level 6</h4>
           <div class="credential-rule"></div>
           <p>Security management qualification associated with ISMI.</p>
         </article>
 
         <article class="credential-card">
-          <div class="credential-mark wordmark">ASIS<small>INTERNATIONAL</small></div>
+          <div class="credential-mark wordmark asis">ASIS<small>INTERNATIONAL</small></div>
           <h4>Professional Member</h4>
           <div class="credential-rule"></div>
           <p>Member of ASIS International and its global professional security community.</p>
         </article>
 
         <article class="credential-card">
-          <div class="credential-mark wordmark">ISMI<small>UK</small></div>
+          <div class="credential-mark wordmark ismi">ISMI<small>UK</small></div>
           <h4>Professional Member</h4>
           <div class="credential-rule"></div>
           <p>Member of the International Security Management Institute, UK.</p>
