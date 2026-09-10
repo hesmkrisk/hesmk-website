@@ -1,0 +1,35 @@
+name: Restore Original Website
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  restore:
+    if: github.event.head_commit.message == 'Restore original website'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Restore index to pre-change version
+        run: |
+          git restore --source=f68066bd019325a19362e73f8fbffbc9346d5aa9 -- index.html
+          rm -f .github/workflows/replace-credentials-final.yml
+      - name: Commit restored website
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html .github/workflows/replace-credentials-final.yml
+          git diff --cached --quiet || git commit -m "Restore original website"
+          git push
+      - name: Remove restore workflow
+        if: always()
+        run: |
+          rm -f .github/workflows/restore-original.yml
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -u .github/workflows/restore-original.yml || true
+          git diff --cached --quiet || git commit -m "Remove restore workflow"
+          git push || true
