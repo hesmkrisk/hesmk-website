@@ -1,0 +1,63 @@
+name: SEO Step 4B
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  seo:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update natural SEO copy
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          replacements = [
+            (
+              '''HESMK Integrated Solutions helps organizations identify, assess and manage\n          security risks through practical, intelligence-led and risk-based security strategies.''',
+              '''HESMK Integrated Solutions is a risk-based security consultancy in Pakistan helping organizations identify, assess and manage security risks through practical, intelligence-led security strategies.'''
+            ),
+            (
+              '''Traditional security approaches can apply the same controls regardless of the\n          actual threat environment. HESMK takes a different approach.''',
+              '''Traditional security approaches can apply the same controls regardless of the\n          actual threat environment. HESMK takes a different approach to security risk management.'''
+            ),
+            (
+              '''We help leadership understand what matters most, what could go wrong,\n          where vulnerabilities exist and which security measures are proportionate\n          to the organization's risk.''',
+              '''We help leadership understand what matters most, what could go wrong,\n          where vulnerabilities exist and which security measures are proportionate\n          to the organization's risk through structured security risk assessment and risk management.'''
+            ),
+            (
+              '''<h2>Risk-Based Security Solutions Across Key Sectors</h2>\n      </div>''',
+              '''<h2>Risk-Based Security Solutions Across Key Sectors</h2>\n        <p>HESMK supports corporate, banking, industrial, real estate, healthcare and NGO / INGO organizations with security risk assessment, protective security and organizational resilience solutions.</p>\n      </div>'''
+            )
+          ]
+
+          for old, new in replacements:
+              if old not in s:
+                  raise SystemExit(f'Missing expected text: {old[:80]}')
+              s = s.replace(old, new, 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit SEO changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "SEO Step 4B: strengthen natural keyword relevance"
+          git push
+
+      - name: Remove temporary workflow
+        run: |
+          rm -f .github/workflows/seo-step4b.yml
+          git add .github/workflows/seo-step4b.yml
+          git commit -m "Remove temporary SEO Step 4B workflow"
+          git push
