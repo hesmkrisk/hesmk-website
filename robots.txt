@@ -2,3 +2,5 @@ User-agent: *
 Allow: /
 
 Sitemap: https://hesmk.com.pk/sitemap.xml
+
+# SEO Step 4A execution trigger
