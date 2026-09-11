@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://hesmk.com.pk/sitemap.xml
