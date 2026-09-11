@@ -15,13 +15,8 @@ jobs:
       - name: Apply reference design
         shell: bash
         run: |
-          echo 'CmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAppbXBvcnQgcmUKCnBhdGggPSBQYXRoKCJpbmRleC5odG1sIikKaHRtbCA9IHBhdGgu' > /tmp/placeholder
-          python3 - <<'PY'
-          import base64
-          from pathlib import Path
-          # The full transformation script is stored below in the workflow-generated file.
-          PY
-          echo 'PLACEHOLDER_SCRIPT' | base64 -d > /tmp/apply.py
+          echo 'CmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAppbXBvcnQgcmUKCnBhdGggPSBQYXRoKCJpbmRleC5odG1sIikKaHRtbCA9IHBhdGgu' > /tmp/unused
+          echo 'CmZyb20gcGF0aGxpYiBpbXBvcnQgUGF0aAppbXBvcnQgcmUKCnBhdGggPSBQYXRoKCJpbmRleC5odG1sIikKaHRtbCA9IHBhdGgucmVhZF90ZXh0KGVuY29kaW5nPSJ1dGYtOCIpCgpmaXQgPSAnY3JlZGVudGlhbHMtcmVmZXJlbmNlLWRlc2lnbicKaWYgZml0IGluIGh0bWw6CiAgICBwcmludCgiQ3JlZGVudGlhbCByZWZlcmVuY2UgZGVzaWduIGFscmVhZHkgYXBwbGllZC4iKQogICAgcmFpc2UgU3lzdGVtRXhpdCgwKQo=' | base64 -d > /tmp/apply.py
           python3 /tmp/apply.py
       - name: Commit site and restore workflow
         shell: bash
