@@ -1373,6 +1373,81 @@ footer{background:var(--navy)!important;}
 \n/* CREDENTIAL LAYOUT REPAIR 2026-09-11 */\n.credentials-section .credential-cards{\n  display:grid !important;\n  grid-template-columns:repeat(5,minmax(0,1fr)) !important;\n  gap:8px !important;\n  width:calc(100% - 610px) !important;\n  margin-left:610px !important;\n  margin-right:0 !important;\n  margin-top:8px !important;\n  position:relative !important;\n  z-index:4 !important;\n}\n.credentials-section .credential-card{\n  height:196px !important;\n  min-height:196px !important;\n  padding:6px 7px 8px !important;\n  border-radius:8px !important;\n  overflow:hidden !important;\n}\n.credentials-section .credential-mark{\n  height:48px !important;\n  min-height:48px !important;\n  margin-bottom:4px !important;\n  padding:2px !important;\n  border-radius:6px !important;\n}\n.credentials-section .credential-mark img{\n  width:36px !important;\n  height:36px !important;\n  max-width:38px !important;\n  max-height:36px !important;\n}\n.credentials-section .credential-mark strong{font-size:1.02rem !important;line-height:1 !important;}\n.credentials-section .cpp-mark strong{font-size:1.25rem !important;}\n.credentials-section .csmp-mark strong{font-size:1.16rem !important;}\n.credentials-section .asis-mark strong{font-size:1.22rem !important;}\n.credentials-section .ismi-mark strong{font-size:.82rem !important;}\n.credentials-section .csmp-mark small{font-size:.42rem !important;letter-spacing:.13em !important;margin-top:2px !important;}\n.credentials-section .credential-card h4{font-size:.64rem !important;line-height:1.04 !important;min-height:27px !important;margin:2px 0 0 !important;}\n.credentials-section .credential-card .gold-rule.tiny{width:18px !important;margin:3px auto 4px !important;}\n.credentials-section .credential-card p{font-size:.52rem !important;line-height:1.16 !important;margin:0 !important;}\n@media(max-width:1100px){\n  .credentials-section .credential-cards{width:100% !important;margin-left:0 !important;grid-template-columns:repeat(3,minmax(0,1fr)) !important;}\n  .credentials-section .credential-card{height:auto !important;min-height:195px !important;}\n}\n@media(max-width:700px){\n  .credentials-section .credential-cards{grid-template-columns:1fr 1fr !important;gap:8px !important;}\n  .credentials-section .credential-card{min-height:192px !important;}\n}\n</style>
 
 </style>\n</style>
+<style id="FINAL-CREDENTIAL-SEPARATION">
+.credentials-section .credential-cards{
+  width:calc(100% - 610px) !important;
+  margin-left:610px !important;
+  margin-right:0 !important;
+  margin-top:12px !important;
+  gap:8px !important;
+  position:relative !important;
+  z-index:5 !important;
+}
+
+.credentials-section .credential-card{
+  height:210px !important;
+  min-height:210px !important;
+  padding:7px 8px 8px !important;
+  border-radius:8px !important;
+}
+
+.credentials-section .credential-mark{
+  height:50px !important;
+  min-height:50px !important;
+  margin-bottom:4px !important;
+  padding:2px !important;
+}
+
+.credentials-section .credential-mark img{
+  width:38px !important;
+  height:38px !important;
+  max-width:40px !important;
+  max-height:38px !important;
+}
+
+.credentials-section .credential-mark strong{font-size:1.05rem !important;}
+.credentials-section .cpp-mark strong{font-size:1.28rem !important;}
+.credentials-section .csmp-mark strong{font-size:1.20rem !important;}
+.credentials-section .asis-mark strong{font-size:1.25rem !important;}
+.credentials-section .ismi-mark strong{font-size:.82rem !important;}
+
+.credentials-section .credential-card h4{
+  font-size:.66rem !important;
+  line-height:1.06 !important;
+  min-height:29px !important;
+  margin:2px 0 0 !important;
+}
+
+.credentials-section .credential-card .gold-rule.tiny{
+  width:20px !important;
+  margin:3px auto 4px !important;
+}
+
+.credentials-section .credential-card p{
+  font-size:.53rem !important;
+  line-height:1.18 !important;
+  margin:0 !important;
+}
+
+@media(max-width:1100px){
+  .credentials-section .credential-cards{
+    width:100% !important;
+    margin-left:0 !important;
+    grid-template-columns:repeat(3,minmax(0,1fr)) !important;
+  }
+  .credentials-section .credential-card{
+    height:auto !important;
+    min-height:200px !important;
+  }
+}
+
+@media(max-width:700px){
+  .credentials-section .credential-cards{
+    grid-template-columns:1fr 1fr !important;
+    gap:8px !important;
+  }
+}
+</style>
 </head>
 
 <body>
