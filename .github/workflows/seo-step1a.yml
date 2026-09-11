@@ -1,0 +1,49 @@
+name: SEO Step 1A - Metadata and Canonicalization
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  seo-step-1a:
+    if: github.event.head_commit.message != 'Implement SEO Step 1A metadata and canonicalization'
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Update SEO metadata
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          s = s.replace('<meta name="keywords" content="Security Risk Assessment Pakistan, Security Consultancy Pakistan, Risk Based Security Pakistan, Physical Security Consultant Pakistan, Corporate Security Pakistan, Security Risk Management Pakistan, Organizational Resilience Pakistan">\n', '')
+
+          old = '''  <meta name="author" content="HESMK Integrated Solutions">\n\n  <meta property="og:title" content="HESMK Integrated Solutions | Risk-Based Security">\n  <meta property="og:description" content="Risk-Based Security for a Changing Pakistan.">\n  <meta property="og:type" content="website">\n  <meta property="og:url" content="https://hesmk.com.pk/">'''
+
+          new = '''  <meta name="author" content="HESMK Integrated Solutions">\n  <meta name="robots" content="index, follow">\n  <meta name="theme-color" content="#081827">\n\n  <link rel="canonical" href="https://hesmk.com.pk/">\n\n  <meta property="og:title" content="HESMK Integrated Solutions | Risk-Based Security Consultancy Pakistan">\n  <meta property="og:description" content="Risk-based security consultancy, security risk assessment, physical security, counter-terrorism advisory and organizational resilience solutions in Pakistan.">\n  <meta property="og:type" content="website">\n  <meta property="og:url" content="https://hesmk.com.pk/">\n  <meta property="og:site_name" content="HESMK Integrated Solutions">\n\n  <meta name="twitter:card" content="summary">\n  <meta name="twitter:title" content="HESMK Integrated Solutions | Risk-Based Security Consultancy Pakistan">\n  <meta name="twitter:description" content="Risk-based security consultancy, security risk assessment, physical security, counter-terrorism advisory and organizational resilience solutions in Pakistan.">'''
+
+          if old not in s:
+              raise SystemExit('Expected SEO metadata block was not found; no changes made.')
+          s = s.replace(old, new, 1)
+
+          marker = '<!-- SEO-STEP-1A -->'
+          if marker not in s:
+              s = s.replace('<link rel="canonical" href="https://hesmk.com.pk/">', marker + '\n  <link rel="canonical" href="https://hesmk.com.pk/">', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit SEO changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "Implement SEO Step 1A metadata and canonicalization"
+          git push
