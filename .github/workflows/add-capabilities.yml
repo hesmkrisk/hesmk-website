@@ -27,12 +27,12 @@ jobs:
           if not css_match:
               raise SystemExit('Approved credentials CSS not found')
           css = css_match.group(0).replace('</style>', '', 1)
-          section_match = re.search(r'<!-- LEADERSHIP &amp; PROFESSIONAL CREDENTIALS -->(.*?)<!-- SECTORS -->', reference, re.S)
-          if not section_match:
+          start = reference.find('<section class="section credentials-section" id="credentials">')
+          end = reference.find('</section>', start)
+          if start < 0 or end < 0:
               raise SystemExit('Approved credentials HTML not found')
-          section = section_match.group(1)
-          section = '<section class="section credentials-reference" id="credentials-reference-design">' + section.split('<section class="section credentials-section" id="credentials">',1)[1].split('</section>',1)[0] + '</section>'
-          section = section.replace('class="section credentials-section" id="credentials"','class="section credentials-reference" id="credentials-reference-design"')
+          section = reference[start:end+10]
+          section = section.replace('class="section credentials-section" id="credentials"','class="section credentials-reference" id="credentials-reference-design"',1)
           current = current.replace('</style>', css + '\n</style>', 1)
           sector = re.search(r'<section[^>]+id=["\']sectors["\'][^>]*>', current, re.I)
           if not sector:
