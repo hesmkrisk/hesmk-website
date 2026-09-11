@@ -1,0 +1,92 @@
+name: SEO Step 2 - Organization Schema
+
+on:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write
+
+jobs:
+  add-schema:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Add Organization structured data
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+
+          path = Path('index.html')
+          text = path.read_text(encoding='utf-8')
+          marker = '<!-- SEO-STEP-2-SCHEMA -->'
+
+          if marker in text:
+              print('SEO Step 2 schema already present; no change needed.')
+              raise SystemExit(0)
+
+          schema = '''  <!-- SEO-STEP-2-SCHEMA -->
+          <script type="application/ld+json">
+          {
+            "@context": "https://schema.org",
+            "@type": "Organization",
+            "@id": "https://hesmk.com.pk/#organization",
+            "name": "HESMK Integrated Solutions",
+            "url": "https://hesmk.com.pk/",
+            "logo": {
+              "@type": "ImageObject",
+              "url": "https://hesmk.com.pk/logo-classic-authority.svg",
+              "contentUrl": "https://hesmk.com.pk/logo-classic-authority.svg",
+              "width": 1380,
+              "height": 440
+            },
+            "description": "HESMK Integrated Solutions provides risk-based security consultancy, security risk assessments, physical security, counter-terrorism advisory and organizational resilience solutions in Pakistan.",
+            "email": "info@hesmk.com.pk",
+            "contactPoint": {
+              "@type": "ContactPoint",
+              "email": "info@hesmk.com.pk",
+              "contactType": "customer service",
+              "areaServed": "PK"
+            },
+            "areaServed": {
+              "@type": "Country",
+              "name": "Pakistan"
+            },
+            "knowsAbout": [
+              "Security Risk Assessment",
+              "Security Risk Management",
+              "Physical Security",
+              "Protective Security",
+              "Counter-Terrorism",
+              "Threat Assessment",
+              "Vulnerability Assessment",
+              "Organizational Resilience",
+              "Business Continuity",
+              "Enterprise Security Risk Management"
+            ]
+          }
+          </script>
+          '''
+
+          anchor = '  <style>'
+          if anchor not in text:
+              raise SystemExit('Could not find insertion point in index.html')
+
+          text = text.replace(anchor, schema + '\n' + anchor, 1)
+          path.write_text(text, encoding='utf-8')
+          print('Organization schema added.')
+          PY
+
+      - name: Commit and push
+        run: |
+          if git diff --quiet; then
+            echo "No changes to commit."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git commit -m "Add Organization structured data for SEO"
+          git push
