@@ -12,7 +12,7 @@ jobs:
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      - name: Extract approved credentials design
+      - name: Apply approved credentials design
         shell: bash
         run: |
           git show 0d5728b057eb4ddb55fe2e79a25a2ff8442f1c0c:index.html > /tmp/reference.html
@@ -47,13 +47,11 @@ jobs:
           Path('index.html').write_text(current, encoding='utf-8')
           print('Credentials design applied.')
           PY
-      - name: Commit and restore workflow
+      - name: Commit site only
         shell: bash
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git checkout d9e028d34610a4203699c094a60a03fec14e9259 -- .github/workflows/add-capabilities.yml
-          rm -f apply_credentials.b64
-          git add index.html .github/workflows/add-capabilities.yml apply_credentials.b64
+          git add index.html
           git commit -m "Apply leadership credentials reference design"
           git push
