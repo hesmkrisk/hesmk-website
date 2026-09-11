@@ -1,13 +1,15 @@
 name: SEO Step 4B
 
 on:
-  workflow_dispatch:
+  push:
+    branches: [main]
 
 permissions:
   contents: write
 
 jobs:
   seo:
+    if: ${{ !contains(github.event.head_commit.message, 'SEO Step 4B') }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -59,5 +61,5 @@ jobs:
         run: |
           rm -f .github/workflows/seo-step4b.yml
           git add .github/workflows/seo-step4b.yml
-          git commit -m "Remove temporary SEO Step 4B workflow"
+          git commit -m "SEO Step 4B: remove temporary workflow"
           git push
