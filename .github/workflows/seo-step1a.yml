@@ -1,4 +1,4 @@
-name: SEO Step 1A - Metadata and Canonicalization
+name: SEO Step 4A - On-Page SEO
 
 on:
   push:
@@ -8,41 +8,59 @@ permissions:
   contents: write
 
 jobs:
-  seo-step-1a:
+  seo-step-4a:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Update SEO metadata
+      - name: Apply controlled on-page SEO improvements
         run: |
           python - <<'PY'
           from pathlib import Path
-          p = Path('index.html')
-          s = p.read_text(encoding='utf-8')
+          import re
 
-          s = s.replace('<meta name="keywords" content="Security Risk Assessment Pakistan, Security Consultancy Pakistan, Risk Based Security Pakistan, Physical Security Consultant Pakistan, Corporate Security Pakistan, Security Risk Management Pakistan, Organizational Resilience Pakistan">\n', '')
+          path = Path('index.html')
+          html = path.read_text(encoding='utf-8')
 
-          old = '''  <meta name="author" content="HESMK Integrated Solutions">\n\n  <meta property="og:title" content="HESMK Integrated Solutions | Risk-Based Security">\n  <meta property="og:description" content="Risk-Based Security for a Changing Pakistan.">\n  <meta property="og:type" content="website">\n  <meta property="og:url" content="https://hesmk.com.pk/">'''
+          replacements = [
+              ('<h2>Security Should Be Designed Around Risk — Not Assumptions</h2>', '<h2>Security Risk Management — Not Assumptions</h2>'),
+              ('<h2>Security Solutions Designed Around Your Risk</h2>', '<h2>Risk-Based Security Solutions Across Key Sectors</h2>'),
+              ('<h2>HESMK Capabilities</h2>', '<h2>Security Risk Management &amp; Protective Security Capabilities</h2>'),
+              ('<p class="capabilities-subtitle">From Security Risk to Organizational Resilience</p>', '<p class="capabilities-subtitle">Security Risk Assessment, Protective Security &amp; Organizational Resilience</p>'),
+              ('<p class="capabilities-intro">We help organizations understand their security risks, design proportionate solutions and build long-term resilience.</p>', '<p class="capabilities-intro">We help organizations assess security risk, strengthen protective security and build organizational resilience through proportionate, practical solutions.</p>'),
+              ('<h2>Let\'s Discuss Your Security Risk</h2>', '<h2>Discuss Your Security Risk</h2>'),
+              ('Request a Security Consultation →', 'Request a Security Risk Consultation →'),
+              ('>Request Consultation →<', '>Request Security Consultation →<'),
+          ]
 
-          new = '''  <meta name="author" content="HESMK Integrated Solutions">\n  <meta name="robots" content="index, follow">\n  <meta name="theme-color" content="#081827">\n\n  <link rel="canonical" href="https://hesmk.com.pk/">\n\n  <meta property="og:title" content="HESMK Integrated Solutions | Risk-Based Security Consultancy Pakistan">\n  <meta property="og:description" content="Risk-based security consultancy, security risk assessment, physical security, counter-terrorism advisory and organizational resilience solutions in Pakistan.">\n  <meta property="og:type" content="website">\n  <meta property="og:url" content="https://hesmk.com.pk/">\n  <meta property="og:site_name" content="HESMK Integrated Solutions">\n\n  <meta name="twitter:card" content="summary">\n  <meta name="twitter:title" content="HESMK Integrated Solutions | Risk-Based Security Consultancy Pakistan">\n  <meta name="twitter:description" content="Risk-based security consultancy, security risk assessment, physical security, counter-terrorism advisory and organizational resilience solutions in Pakistan.">'''
+          for old, new in replacements:
+              if old in html:
+                  html = html.replace(old, new)
+                  print('Updated:', old)
+              else:
+                  print('Not found (already changed or absent):', old)
 
-          if old not in s:
-              raise SystemExit('Expected SEO metadata block was not found; no changes made.')
-          s = s.replace(old, new, 1)
+          h1_pattern = r'<h1>\s*Risk-Based Security for a\s*<span>Changing Pakistan</span>\s*</h1>'
+          h1_replacement = '<h1>Risk-Based Security for a <span>Changing Pakistan</span></h1>'
+          html, _ = re.subn(h1_pattern, h1_replacement, html, count=1)
 
-          marker = '<!-- SEO-STEP-1A -->'
-          if marker not in s:
-              s = s.replace('<link rel="canonical" href="https://hesmk.com.pk/">', marker + '\n  <link rel="canonical" href="https://hesmk.com.pk/">', 1)
+          path.write_text(html, encoding='utf-8')
 
-          p.write_text(s, encoding='utf-8')
+          robots = Path('robots.txt')
+          if robots.exists():
+              r = robots.read_text(encoding='utf-8')
+              r = r.replace('\n# SEO Step 4A execution trigger\n', '\n')
+              robots.write_text(r, encoding='utf-8')
           PY
 
-      - name: Commit SEO changes
+      - name: Remove temporary workflow and commit
         run: |
+          rm -f .github/workflows/seo-step1a.yml
+          rm -f .github/workflows/seo-step4a.yml
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add index.html
+          git add index.html robots.txt .github/workflows/seo-step1a.yml .github/workflows/seo-step4a.yml
           git diff --cached --quiet && exit 0
-          git commit -m "Implement SEO Step 1A metadata and canonicalization"
+          git commit -m "SEO Step 4A: improve homepage headings and search relevance"
           git push
