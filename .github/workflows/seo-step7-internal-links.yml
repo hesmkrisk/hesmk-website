@@ -17,40 +17,35 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Add service-page internal links
+      - name: Add capability internal links
         run: |
           python - <<'PY'
           from pathlib import Path
-          import re
 
           p = Path('index.html')
           s = p.read_text(encoding='utf-8')
 
           links = {
-              'Enterprise Security Risk Assessment': 'security-risk-assessment.html',
-              'Security Risk Management': 'security-risk-management.html',
-              'Threat & Counter-Terrorism Advisory': 'counter-terrorism-threat-management.html',
-              'Physical & Protective Security': 'physical-protective-security.html',
-              'Crisis & Emergency Management': 'organizational-resilience-business-continuity.html',
-              'Business Continuity & Organizational Resilience': 'organizational-resilience-business-continuity.html',
-              'Security Governance & Risk Advisory': 'security-governance-risk-advisory.html',
+              'Protective Security': 'physical-protective-security.html',
+              'Threat &amp; Counter-Terrorism Advisory': 'counter-terrorism-threat-management.html',
+              'Physical Security': 'physical-protective-security.html',
+              'Crisis &amp; Emergency Management': 'organizational-resilience-business-continuity.html',
+              'Business Continuity &amp; Resilience': 'organizational-resilience-business-continuity.html',
+              'Security Governance &amp; Risk Advisory': 'security-governance-risk-advisory.html',
           }
 
-          for label, url in links.items():
-              pattern = re.compile(
-                  r'(<div\\s+class=["\']service-card["\'][^>]*>.*?<h3>)(?!<a\\b)(.*?'+re.escape(label)+r'.*?)(</h3>)',
-                  re.I | re.S
-              )
-              def repl(m, url=url):
-                  return m.group(1) + '<a href="' + url + '">' + m.group(2) + '</a>' + m.group(3)
-              s, n = pattern.subn(repl, s, count=1)
-              if n == 0:
-                  raise SystemExit(f'Could not find service card heading: {label}')
+          style = ' style="color:inherit;text-decoration:underline;text-decoration-color:rgba(184,148,85,.55);text-underline-offset:3px"'
 
-          marker = '</style>'
-          css = '''\n    /* SEO STEP 7 - INTERNAL SERVICE LINKS */\n    .service-card h3 a {\n      color: inherit;\n      text-decoration: none;\n    }\n    .service-card h3 a:hover {\n      color: var(--accent);\n    }\n'''
-          if '/* SEO STEP 7 - INTERNAL SERVICE LINKS */' not in s:
-              s = s.replace(marker, css + '  </style>', 1)
+          for label, url in links.items():
+              plain = label.replace('&amp;', '&')
+              old = f'<div class="cap-cell capability">{label}</div>'
+              if old not in s:
+                  old = f'<div class="cap-cell capability">{plain}</div>'
+              if old in s:
+                  new = f'<div class="cap-cell capability"><a href="{url}"{style}>{label}</a></div>'
+                  s = s.replace(old, new, 1)
+              elif f'<a href="{url}"' not in s:
+                  raise SystemExit(f'Capability marker not found: {label}')
 
           p.write_text(s, encoding='utf-8')
           PY
