@@ -1,0 +1,65 @@
+name: SEO Step 7 - Internal Links
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'index.html'
+      - '.github/workflows/seo-step7-internal-links.yml'
+
+permissions:
+  contents: write
+
+jobs:
+  internal-links:
+    if: ${{ !contains(github.event.head_commit.message, 'SEO Step 7: add internal service links') }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Add service-page internal links
+        run: |
+          python - <<'PY'
+          from pathlib import Path
+          import re
+
+          p = Path('index.html')
+          s = p.read_text(encoding='utf-8')
+
+          links = {
+              'Enterprise Security Risk Assessment': 'security-risk-assessment.html',
+              'Security Risk Management': 'security-risk-management.html',
+              'Threat & Counter-Terrorism Advisory': 'counter-terrorism-threat-management.html',
+              'Physical & Protective Security': 'physical-protective-security.html',
+              'Crisis & Emergency Management': 'organizational-resilience-business-continuity.html',
+              'Business Continuity & Organizational Resilience': 'organizational-resilience-business-continuity.html',
+              'Security Governance & Risk Advisory': 'security-governance-risk-advisory.html',
+          }
+
+          for label, url in links.items():
+              pattern = re.compile(
+                  r'(<div\\s+class=["\']service-card["\'][^>]*>.*?<h3>)(?!<a\\b)(.*?'+re.escape(label)+r'.*?)(</h3>)',
+                  re.I | re.S
+              )
+              def repl(m, url=url):
+                  return m.group(1) + '<a href="' + url + '">' + m.group(2) + '</a>' + m.group(3)
+              s, n = pattern.subn(repl, s, count=1)
+              if n == 0:
+                  raise SystemExit(f'Could not find service card heading: {label}')
+
+          marker = '</style>'
+          css = '''\n    /* SEO STEP 7 - INTERNAL SERVICE LINKS */\n    .service-card h3 a {\n      color: inherit;\n      text-decoration: none;\n    }\n    .service-card h3 a:hover {\n      color: var(--accent);\n    }\n'''
+          if '/* SEO STEP 7 - INTERNAL SERVICE LINKS */' not in s:
+              s = s.replace(marker, css + '  </style>', 1)
+
+          p.write_text(s, encoding='utf-8')
+          PY
+
+      - name: Commit changes
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git diff --cached --quiet && exit 0
+          git commit -m "SEO Step 7: add internal service links"
+          git push
