@@ -15,7 +15,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Apply exact profile text change
+      - name: Apply Option 6 profile descriptor only
         run: |
           python3 - <<'PY'
           from pathlib import Path
@@ -25,14 +25,7 @@ jobs:
           s = p.read_text(encoding='utf-8')
           original = s
 
-          s, name_count = re.subn(
-              r'Lt Col Khalid Habib \(Retd\.\)',
-              'Khalid Habib',
-              s,
-              count=1
-          )
-
-          role_pattern = r'(<div class="profile-role">)\s*Security\s*&amp;\s*Risk\s*Professional\s*[•·]\s*Former SSG Officer\s*(</div>)'
+          role_pattern = r'(<div class="profile-role">)\s*Security\s*&amp;\s*Risk\s*Professional\s*<span>•</span>\s*Former SSG Officer\s*(</div>)'
           s, role_count = re.subn(
               role_pattern,
               r'\1Former SSG Officer\2\n              <div class="profile-tagline">EXPERIENCE | INSIGHT | PRACTICAL SOLUTIONS</div>',
@@ -40,8 +33,6 @@ jobs:
               count=1
           )
 
-          if name_count != 1:
-              raise SystemExit(f'Expected exactly one name replacement, got {name_count}')
           if role_count != 1:
               raise SystemExit(f'Expected exactly one profile-role replacement, got {role_count}')
 
@@ -50,13 +41,11 @@ jobs:
           if style_marker not in s:
               anchor = '    /* CREDENTIALS */'
               if anchor not in s:
-                  anchor = '    /* LEADERSHIP */'
-              if anchor not in s:
-                  raise SystemExit('Could not find credentials/leadership CSS anchor')
+                  raise SystemExit('Could not find credentials CSS anchor')
               s = s.replace(anchor, style_block + '\n' + anchor, 1)
 
           p.write_text(s, encoding='utf-8')
-          print(f'name_count={name_count}, role_count={role_count}, changed={s != original}')
+          print(f'role_count={role_count}, changed={s != original}')
           PY
 
       - name: Commit and push
@@ -65,5 +54,5 @@ jobs:
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add index.html
           git diff --cached --quiet && echo "No changes to commit" && exit 0
-          git commit -m "Update leadership profile to Khalid Habib"
+          git commit -m "Apply Option 6 leadership profile descriptor"
           git push
