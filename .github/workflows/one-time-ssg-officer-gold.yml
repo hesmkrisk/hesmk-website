@@ -1,0 +1,44 @@
+name: One-Time SSG Officer Gold
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+
+jobs:
+  apply-change:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Apply targeted CSS change
+        shell: python
+        run: |
+          from pathlib import Path
+
+          path = Path("index.html")
+          html = path.read_text(encoding="utf-8")
+          marker = '<style id="HESMK-SSG-OFFICER-GOLD">'
+
+          if marker not in html:
+              css = '''<style id="HESMK-SSG-OFFICER-GOLD">
+              .credentials-section .profile-role{
+                color: var(--accent) !important;
+              }
+              </style>'''
+              html = html.replace('</head>', css + '\n</head>', 1)
+              path.write_text(html, encoding='utf-8')
+
+      - name: Remove temporary workflow and commit
+        shell: bash
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add index.html
+          git rm .github/workflows/one-time-ssg-officer-gold.yml
+          git commit -m "Make Former SSG Officer profile role gold"
+          git push
