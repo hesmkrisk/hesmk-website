@@ -372,13 +372,12 @@
 
     .chain b { color: var(--accent-light); }
 
-    /* HESMK — THREE-LEVEL RISK-TO-RESILIENCE FLOW */
+    /* HESMK — SIMPLE SEVEN-STEP RISK-TO-RESILIENCE FLOW */
     .risk-chain .chain {
       display: grid;
-      grid-template-columns: repeat(12, minmax(0, 1fr));
-      grid-template-rows: auto auto auto;
-      column-gap: 7px;
-      row-gap: 13px;
+      grid-template-columns: repeat(13, minmax(0, 1fr));
+      column-gap: 8px;
+      row-gap: 12px;
       align-items: center;
     }
 
@@ -397,28 +396,51 @@
       color: var(--accent-light);
       text-align: center;
       font-size: .9rem;
+      font-weight: 700;
     }
 
-    /* Row 1: Context → Assets → Threats → Vulnerabilities */
-    .risk-chain .chain span:nth-child(1) { grid-column: 1 / span 2; grid-row: 1; }
-    .risk-chain .chain b:nth-child(2) { grid-column: 3; grid-row: 1; }
-    .risk-chain .chain span:nth-child(3) { grid-column: 4 / span 2; grid-row: 1; }
-    .risk-chain .chain b:nth-child(4) { grid-column: 6; grid-row: 1; }
-    .risk-chain .chain span:nth-child(5) { grid-column: 7 / span 2; grid-row: 1; }
-    .risk-chain .chain b:nth-child(6) { grid-column: 9; grid-row: 1; }
-    .risk-chain .chain span:nth-child(7) { grid-column: 10 / span 3; grid-row: 1; }
+    /* Context → Threat → Vulnerabilities → Consequence → Risk → Control → Resilience */
+    .risk-chain .chain span:nth-child(1) { grid-column: 1 / span 2; }
+    .risk-chain .chain b:nth-child(2) { grid-column: 3; }
+    .risk-chain .chain span:nth-child(3) { grid-column: 4 / span 2; }
+    .risk-chain .chain b:nth-child(4) { grid-column: 6; }
+    .risk-chain .chain span:nth-child(5) { grid-column: 7 / span 2; }
+    .risk-chain .chain b:nth-child(6) { grid-column: 9; }
+    .risk-chain .chain span:nth-child(7) { grid-column: 10 / span 2; }
+    .risk-chain .chain b:nth-child(8) { grid-column: 12; }
+    .risk-chain .chain span:nth-child(9) { grid-column: 13; }
 
-    /* Row 2: Consequences → Risk → Controls */
-    .risk-chain .chain span:nth-child(9) { grid-column: 1 / span 3; grid-row: 2; }
-    .risk-chain .chain b:nth-child(10) { grid-column: 4; grid-row: 2; }
-    .risk-chain .chain span:nth-child(11) { grid-column: 5 / span 2; grid-row: 2; }
-    .risk-chain .chain b:nth-child(12) { grid-column: 7; grid-row: 2; }
-    .risk-chain .chain span:nth-child(13) { grid-column: 8 / span 3; grid-row: 2; }
+    @media (max-width: 900px) {
+      .risk-chain .chain {
+        grid-template-columns: repeat(7, minmax(0, 1fr));
+        column-gap: 6px;
+      }
+      .risk-chain .chain span:nth-child(1) { grid-column: 1; }
+      .risk-chain .chain b:nth-child(2) { grid-column: 2; }
+      .risk-chain .chain span:nth-child(3) { grid-column: 3; }
+      .risk-chain .chain b:nth-child(4) { grid-column: 4; }
+      .risk-chain .chain span:nth-child(5) { grid-column: 5; }
+      .risk-chain .chain b:nth-child(6) { grid-column: 6; }
+      .risk-chain .chain span:nth-child(7) { grid-column: 7; }
+      .risk-chain .chain b:nth-child(8),
+      .risk-chain .chain span:nth-child(9) { display: none; }
+    }
 
-    /* Row 3: Cost → Resilience */
-    .risk-chain .chain span:nth-child(15) { grid-column: 5 / span 2; grid-row: 3; }
-    .risk-chain .chain b:nth-child(16) { grid-column: 7; grid-row: 3; }
-    .risk-chain .chain span:nth-child(17) { grid-column: 8 / span 3; grid-row: 3; }
+    @media (max-width: 680px) {
+      .risk-chain .chain {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 7px;
+      }
+      .risk-chain .chain span {
+        flex: 0 1 auto;
+        min-width: 105px;
+      }
+      .risk-chain .chain b {
+        display: inline-block;
+      }
+    }
 
     /* METHODOLOGY */
     .dark-section {
@@ -1121,7 +1143,7 @@
         <div class="risk-chain reveal">
           <h3>From Threat to Resilience</h3>
           <div class="chain">
-            <span>Context</span><b>→</b><span>Assets</span><b>→</b><span>Threats</span><b>→</b><span>Vulnerabilities</span><b>→</b><span>Consequences</span><b>→</b><span>Risk</span><b>→</b><span>Controls</span><b>→</b><span>Cost</span><b>→</b><span>Resilience</span>
+            <span>Context</span><b>→</b><span>Threat</span><b>→</b><span>Vulnerabilities</span><b>→</b><span>Consequence</span><b>→</b><span>Risk</span><b>→</b><span>Control</span><b>→</b><span>Resilience</span>
           </div>
         </div>
       </div>
