@@ -846,6 +846,9 @@
 
     .form-group select option { color: #111820; }
 
+    .form-group input[hidden] { display: none; }
+    .form-group input::placeholder { color: #8f9ca6; }
+
     .form-group textarea { min-height: 115px; resize: vertical; }
 
     .form-group input:focus,
@@ -1335,8 +1338,8 @@
             <div class="form-group"><label for="email">Email *</label><input id="email" name="email" type="email" required></div>
             <div class="form-group"><label for="phone">Phone</label><input id="phone" name="phone"></div>
             <div class="form-group"><label for="city">City</label><input id="city" name="city"></div>
-            <div class="form-group"><label for="sector">Sector</label><select id="sector" name="sector"><option value="">Select sector</option><option>Corporate &amp; Commercial</option><option>Banking &amp; Financial Services</option><option>Industrial &amp; Manufacturing</option><option>Real Estate &amp; Housing</option><option>Healthcare</option><option>NGOs &amp; INGOs</option></select></div>
-            <div class="form-group"><label for="service">Service</label><select id="service" name="service"><option value="">Select service</option><option>Security Risk Assessment</option><option>Security Risk Management</option><option>Physical &amp; Protective Security</option><option>Counter-Terrorism &amp; Threat Management</option><option>Organizational Resilience &amp; Business Continuity</option><option>Security Governance &amp; Risk Advisory</option></select></div>
+            <div class="form-group"><label for="sector">Sector</label><select id="sector" name="sector"><option value="">Select sector</option><option>Corporate &amp; Commercial</option><option>Banking &amp; Financial Services</option><option>Industrial &amp; Manufacturing</option><option>Real Estate &amp; Housing</option><option>Healthcare</option><option>NGOs &amp; INGOs</option><option>Other</option></select><input class="other-input" id="sector_other" name="sector_other" placeholder="Please specify" aria-label="Please specify your sector" hidden disabled></div>
+            <div class="form-group"><label for="service">Service</label><select id="service" name="service"><option value="">Select service</option><option>Security Risk Assessment</option><option>Security Risk Management</option><option>Physical &amp; Protective Security</option><option>Counter-Terrorism &amp; Threat Management</option><option>Organizational Resilience &amp; Business Continuity</option><option>Security Governance &amp; Risk Advisory</option><option>Other</option></select><input class="other-input" id="service_other" name="service_other" placeholder="Please specify" aria-label="Please specify the service you need" hidden disabled></div>
             <div class="form-group full"><label for="message">How can we help? *</label><textarea id="message" name="message" required></textarea></div>
           </div>
           <div class="form-actions">
@@ -1395,6 +1398,34 @@
       const WHATSAPP_NUMBER = '923215300549';
       const formThanks = document.getElementById('formThanks');
 
+      function toggleOther(selectId) {
+        const select = document.getElementById(selectId);
+        const other = document.getElementById(selectId + '_other');
+        const isOther = select.value === 'Other';
+        other.hidden = !isOther;
+        other.disabled = !isOther;
+        other.required = isOther;
+        if (!isOther) other.value = '';
+      }
+
+      function choiceText(selectId) {
+        const value = document.getElementById(selectId).value;
+        if (value !== 'Other') return value;
+        const typed = document.getElementById(selectId + '_other').value.trim();
+        return typed ? 'Other – ' + typed : 'Other';
+      }
+
+      ['sector', 'service'].forEach(function (id) {
+        document.getElementById(id).addEventListener('change', function () {
+          toggleOther(id);
+          if (this.value === 'Other') document.getElementById(id + '_other').focus();
+        });
+      });
+
+      document.getElementById('contact-form').addEventListener('reset', function () {
+        setTimeout(function () { toggleOther('sector'); toggleOther('service'); }, 0);
+      });
+
       formspree('initForm', {
         formElement: '#contact-form',
         formId: 'mqpazbqp',
@@ -1407,8 +1438,12 @@
           const name = document.getElementById('name').value.trim();
           let message = document.getElementById('message').value.trim();
           if (message.length > 1500) message = message.slice(0, 1500) + '…';
+          const sector = choiceText('sector');
+          const service = choiceText('service');
           const text = 'Hello HESMK, I have just submitted an inquiry on hesmk.com.pk.\n\n'
             + 'Name: ' + name + '\n'
+            + (sector ? 'Sector: ' + sector + '\n' : '')
+            + (service ? 'Service: ' + service + '\n' : '')
             + 'Message: ' + message;
           document.getElementById('whatsappLink').href =
             'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
