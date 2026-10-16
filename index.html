@@ -866,6 +866,38 @@
       line-height: 1.5;
     }
 
+    .contact-meta a:hover { color: var(--accent-light); }
+
+    .form-thanks {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      align-items: center;
+      margin-top: 14px;
+      padding: 16px;
+      border: 1px solid rgba(184,148,85,.45);
+      border-radius: 7px;
+      background: rgba(184,148,85,.08);
+    }
+
+    .form-thanks[hidden] { display: none; }
+    .form-thanks:focus { outline: none; }
+
+    .form-thanks strong {
+      display: block;
+      color: white;
+      font-size: .86rem;
+      margin-bottom: 3px;
+    }
+
+    .form-thanks p {
+      color: #b8c4cd;
+      font-size: .8rem;
+      line-height: 1.5;
+    }
+
+    .form-thanks .btn { flex-shrink: 0; }
+
     /* CTA */
     .cta {
       padding: 62px 0;
@@ -956,6 +988,7 @@
       .method-grid, .services-grid, .sector-grid, .credentials-grid, .form-grid { grid-template-columns: 1fr; }
       .form-group.full { grid-column: auto; }
       .form-actions, .cta-box, .footer-inner { flex-direction: column; align-items: flex-start; }
+      .form-thanks { flex-direction: column; align-items: stretch; }
       .risk-chain .chain {
         display: flex;
         flex-direction: column;
@@ -1280,6 +1313,7 @@
           <p>Tell us about your security challenge, operating environment or organizational requirement. We can help identify the risk, clarify priorities and determine practical next steps.</p>
           <div class="contact-meta">
             <div><strong>Email</strong><span>info@hesmk.com.pk</span></div>
+            <div><strong>WhatsApp</strong><span><a href="https://wa.me/923215300549" target="_blank" rel="noopener">+92 321 5300549</a></span></div>
             <div><strong>Service Area</strong><span>Pakistan &amp; selected international markets</span></div>
             <div><strong>Approach</strong><span>Risk-based • Proportionate • Intelligence-led</span></div>
           </div>
@@ -1299,6 +1333,13 @@
           <div class="form-actions">
             <div class="form-note" data-fs-success aria-live="polite">Your inquiry will be sent securely to HESMK.</div>
             <button class="btn btn-primary" type="submit">Submit Confidential Inquiry →</button>
+          </div>
+          <div class="form-thanks" id="formThanks" role="status" tabindex="-1" hidden>
+            <div>
+              <strong>Thank you. Your inquiry has been submitted to HESMK.</strong>
+              <p>We will respond as soon as possible. For a faster response, you can also continue the conversation on WhatsApp.</p>
+            </div>
+            <a class="btn btn-primary" id="whatsappLink" href="https://wa.me/923215300549" target="_blank" rel="noopener">Continue on WhatsApp →</a>
           </div>
         </form>
       </div>
@@ -1341,9 +1382,31 @@
       window.formspree = window.formspree || function () {
         (formspree.q = formspree.q || []).push(arguments);
       };
+      const WHATSAPP_NUMBER = '923215300549';
+      const formThanks = document.getElementById('formThanks');
+
       formspree('initForm', {
         formElement: '#contact-form',
-        formId: 'mqpazbqp'
+        formId: 'mqpazbqp',
+        onSubmit: function () {
+          formThanks.hidden = true;
+        },
+        renderSuccess: function () {},
+        onSuccess: function (context) {
+          const form = context.form;
+          const name = document.getElementById('name').value.trim();
+          let message = document.getElementById('message').value.trim();
+          if (message.length > 1500) message = message.slice(0, 1500) + '…';
+          const text = 'Hello HESMK, I have just submitted an inquiry on hesmk.com.pk.\n\n'
+            + 'Name: ' + name + '\n'
+            + 'Message: ' + message;
+          document.getElementById('whatsappLink').href =
+            'https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(text);
+          form.reset();
+          formThanks.hidden = false;
+          formThanks.focus({ preventScroll: true });
+          formThanks.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
       });
     </script>
     <script src="https://unpkg.com/@formspree/ajax@1" defer></script>
