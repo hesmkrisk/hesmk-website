@@ -23,48 +23,6 @@
   <meta name="twitter:title" content="HESMK Integrated Solutions | Risk-Based Security Consultancy Pakistan">
   <meta name="twitter:description" content="Risk-based security consultancy, security risk assessment, physical security, counter-terrorism advisory and organizational resilience solutions in Pakistan.">
 
-  <!-- SEO-STEP-2-SCHEMA -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "@id": "https://hesmk.com.pk/#organization",
-  "name": "HESMK Integrated Solutions",
-  "url": "https://hesmk.com.pk/",
-  "logo": {
-    "@type": "ImageObject",
-    "url": "https://hesmk.com.pk/logo-classic-authority.svg",
-    "contentUrl": "https://hesmk.com.pk/logo-classic-authority.svg",
-    "width": 1380,
-    "height": 440
-  },
-  "description": "HESMK Integrated Solutions provides risk-based security consultancy, security risk assessments, physical security, counter-terrorism advisory and organizational resilience solutions in Pakistan.",
-  "email": "info@hesmk.com.pk",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "email": "info@hesmk.com.pk",
-    "contactType": "customer service",
-    "areaServed": "PK"
-  },
-  "areaServed": {
-    "@type": "Country",
-    "name": "Pakistan"
-  },
-  "knowsAbout": [
-    "Security Risk Assessment",
-    "Security Risk Management",
-    "Physical Security",
-    "Protective Security",
-    "Counter-Terrorism",
-    "Threat Assessment",
-    "Vulnerability Assessment",
-    "Organizational Resilience",
-    "Business Continuity",
-    "Enterprise Security Risk Management"
-  ]
-}
-</script>
-
   <style>
     :root {
       --navy: #081827;
@@ -769,6 +727,66 @@
     }
 
     /* CONTACT */
+    .faq-section { background: var(--offwhite); }
+
+    .faq-list {
+      display: grid;
+      gap: 12px;
+      max-width: 900px;
+    }
+
+    .faq-list details {
+      background: var(--white);
+      border: 1px solid var(--border);
+      border-left: 3px solid var(--accent);
+      border-radius: 10px;
+      box-shadow: 0 8px 24px rgba(8,24,39,.05);
+      transition: .25s ease;
+    }
+
+    .faq-list details[open] { box-shadow: var(--shadow); }
+
+    .faq-list summary {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+      padding: 18px 22px;
+      cursor: pointer;
+      list-style: none;
+    }
+
+    .faq-list summary::-webkit-details-marker { display: none; }
+
+    .faq-list summary::after {
+      content: "+";
+      flex-shrink: 0;
+      font-size: 1.4rem;
+      font-weight: 400;
+      line-height: 1;
+      color: var(--accent);
+      transition: transform .25s ease;
+    }
+
+    .faq-list details[open] summary::after { transform: rotate(45deg); }
+
+    .faq-list summary h3 {
+      font-size: 1.02rem;
+      color: var(--navy);
+    }
+
+    .faq-list details p {
+      padding: 0 22px 20px;
+      font-size: .95rem;
+    }
+
+    .faq-list details a {
+      color: var(--accent);
+      font-weight: 600;
+    }
+
+    .faq-list details a:hover { text-decoration: underline; }
+
     .contact-section {
       background: var(--navy);
       color: white;
@@ -1162,6 +1180,130 @@
       color: var(--accent) !important;
     }
     </style>
+  <!-- SEO-STEP-2-SCHEMA -->
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": ["ProfessionalService", "Organization"],
+      "@id": "https://hesmk.com.pk/#organization",
+      "name": "HESMK Integrated Solutions",
+      "legalName": "HESMK Integrated Solutions (SMC-Private) Limited",
+      "url": "https://hesmk.com.pk/",
+      "logo": "https://hesmk.com.pk/logo-classic-authority.svg",
+      "image": "https://hesmk.com.pk/logo-classic-authority.svg",
+      "description": "Risk-based security consultancy in Pakistan providing security risk assessment, security risk management, physical and protective security, counter-terrorism and threat advisory, crisis management, business continuity and organizational resilience. Advisory only — no guard services or equipment sales.",
+      "slogan": "Risk-Based Security for a Changing Pakistan",
+      "email": "info@hesmk.com.pk",
+      "telephone": "+92-321-5300549",
+      "address": {
+        "@type": "PostalAddress",
+        "addressLocality": "Islamabad",
+        "addressCountry": "PK"
+      },
+      "areaServed": [
+        { "@type": "Country", "name": "Pakistan" }
+      ],
+      "founder": { "@id": "https://hesmk.com.pk/#khalid-habib" },
+      "contactPoint": {
+        "@type": "ContactPoint",
+        "contactType": "Consultation enquiries",
+        "email": "info@hesmk.com.pk",
+        "telephone": "+92-321-5300549",
+        "areaServed": "PK",
+        "availableLanguage": ["English", "Urdu"]
+      },
+      "knowsAbout": [
+        "Security risk assessment",
+        "Security risk management",
+        "Enterprise security risk management",
+        "Physical security",
+        "Protective security",
+        "Counter-terrorism advisory",
+        "Threat and vulnerability assessment",
+        "Crisis management",
+        "Business continuity",
+        "Organizational resilience",
+        "Security governance"
+      ],
+      "hasOfferCatalog": {
+        "@type": "OfferCatalog",
+        "name": "Security and risk consultancy services",
+        "itemListElement": [
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Security Risk Assessment", "url": "https://hesmk.com.pk/security-risk-assessment.html", "areaServed": "PK" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Security Risk Management", "url": "https://hesmk.com.pk/security-risk-management.html", "areaServed": "PK" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Physical & Protective Security", "url": "https://hesmk.com.pk/physical-protective-security.html", "areaServed": "PK" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Threat & Counter-Terrorism Advisory", "url": "https://hesmk.com.pk/counter-terrorism-threat-management.html", "areaServed": "PK" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Organizational Resilience & Business Continuity", "url": "https://hesmk.com.pk/organizational-resilience-business-continuity.html", "areaServed": "PK" } },
+          { "@type": "Offer", "itemOffered": { "@type": "Service", "name": "Security Governance & Risk Advisory", "url": "https://hesmk.com.pk/security-governance-risk-advisory.html", "areaServed": "PK" } }
+        ]
+      }
+    },
+    {
+      "@type": "Person",
+      "@id": "https://hesmk.com.pk/#khalid-habib",
+      "name": "Khalid Habib",
+      "jobTitle": "Founder & CEO",
+      "worksFor": { "@id": "https://hesmk.com.pk/#organization" },
+      "description": "Former Special Services Group (SSG) officer with 20+ years in corporate security, risk management and business resilience.",
+      "alumniOf": { "@type": "CollegeOrUniversity", "name": "National University of Sciences and Technology (NUST), Islamabad" },
+      "hasCredential": [
+        { "@type": "EducationalOccupationalCredential", "name": "CPP® — Certified Protection Professional", "recognizedBy": { "@type": "Organization", "name": "ASIS International" } },
+        { "@type": "EducationalOccupationalCredential", "name": "CSMP — Certified Security Management Professional (Level 6)", "recognizedBy": { "@type": "Organization", "name": "International Security Management Institute (ISMI), UK" } }
+      ],
+      "memberOf": [
+        { "@type": "Organization", "name": "ASIS International" },
+        { "@type": "Organization", "name": "International Security Management Institute (ISMI)" }
+      ]
+    },
+    {
+      "@type": "WebSite",
+      "@id": "https://hesmk.com.pk/#website",
+      "url": "https://hesmk.com.pk/",
+      "name": "HESMK Integrated Solutions",
+      "publisher": { "@id": "https://hesmk.com.pk/#organization" },
+      "inLanguage": "en"
+    },
+    {
+      "@type": "FAQPage",
+      "@id": "https://hesmk.com.pk/#faq",
+      "mainEntity": [
+        {
+          "@type": "Question",
+          "name": "What does HESMK Integrated Solutions do?",
+          "acceptedAnswer": { "@type": "Answer", "text": "HESMK Integrated Solutions is a risk-based security consultancy in Pakistan. It helps organizations identify, assess and manage security risk through security risk assessment, security risk management, physical and protective security advisory, counter-terrorism and threat advisory, crisis management, business continuity and security governance." }
+        },
+        {
+          "@type": "Question",
+          "name": "Does HESMK provide security guards or sell security equipment?",
+          "acceptedAnswer": { "@type": "Answer", "text": "No. HESMK is an independent advisory firm. It does not provide guards or sell equipment. It assesses risk and existing security arrangements and advises leadership on proportionate controls, often complementing the security provider an organization already uses." }
+        },
+        {
+          "@type": "Question",
+          "name": "What is a security risk assessment?",
+          "acceptedAnswer": { "@type": "Answer", "text": "A security risk assessment establishes what an organization needs to protect, the credible threats it faces, where it is vulnerable and what the consequences of an incident would be. The result is a prioritized risk picture, a security risk register and a treatment plan, so security spending follows assessed risk rather than assumptions." }
+        },
+        {
+          "@type": "Question",
+          "name": "Which sectors does HESMK work with in Pakistan?",
+          "acceptedAnswer": { "@type": "Answer", "text": "HESMK works with corporate and commercial organizations, banks and financial institutions, industrial and manufacturing operations, real estate and housing developments, hospitals and healthcare facilities, and NGOs and INGOs operating in Pakistan." }
+        },
+        {
+          "@type": "Question",
+          "name": "Who leads HESMK?",
+          "acceptedAnswer": { "@type": "Answer", "text": "HESMK is led by Khalid Habib, Founder & CEO, a former Special Services Group (SSG) officer who holds the CPP® (Certified Protection Professional) from ASIS International and the CSMP Level 6 (Certified Security Management Professional) from the International Security Management Institute, UK, with more than 20 years in security, risk management and business resilience." }
+        },
+        {
+          "@type": "Question",
+          "name": "Where does HESMK operate and how can I contact it?",
+          "acceptedAnswer": { "@type": "Answer", "text": "HESMK is based in Islamabad and serves organizations across Pakistan and in selected international markets. Contact info@hesmk.com.pk or WhatsApp +92 321 5300549 to request a confidential security risk consultation." }
+        }
+      ]
+    }
+  ]
+}
+</script>
 </head>
 <body>
 
@@ -1173,6 +1315,7 @@
       <nav class="nav-links" id="navLinks">
         <a href="#about">About</a>
         <a href="#sectors">Sectors</a>
+        <a href="#faq">FAQ</a>
         <a href="#contact">Contact</a>
         <a class="btn btn-primary nav-cta" href="#contact">Request Consultation</a>
       </nav>
@@ -1314,6 +1457,46 @@
         </div>
         <div class="credentials-tagline reveal">Experience. Certification. Global Perspective.</div>
         <p class="credentials-support reveal">HESMK combines operational security experience with internationally recognized professional credentials and established security and risk management principles.</p>
+      </div>
+    </section>
+
+    <section class="section faq-section faq" id="faq">
+      <div class="container">
+        <div class="section-heading reveal">
+          <div class="eyebrow">Frequently Asked Questions</div>
+          <h2>About HESMK and Security Risk Assessment in Pakistan</h2>
+        </div>
+        <div class="faq-list reveal">
+          <details>
+            <summary><h3>What does HESMK Integrated Solutions do?</h3></summary>
+            <p>HESMK Integrated Solutions is a risk-based security consultancy in Pakistan. It helps organizations identify, assess and manage security risk through security risk assessment, security risk management, physical and protective security advisory, counter-terrorism and threat advisory, crisis management, business continuity and security governance.</p>
+          </details>
+
+          <details>
+            <summary><h3>Does HESMK provide security guards or sell security equipment?</h3></summary>
+            <p>No. HESMK is an independent advisory firm. It does not provide guards or sell equipment. It assesses risk and existing security arrangements and advises leadership on proportionate controls, often complementing the security provider an organization already uses.</p>
+          </details>
+
+          <details>
+            <summary><h3>What is a security risk assessment?</h3></summary>
+            <p>A security risk assessment establishes what an organization needs to protect, the credible threats it faces, where it is vulnerable and what the consequences of an incident would be. The result is a prioritized risk picture, a security risk register and a treatment plan, so security spending follows assessed risk rather than assumptions.</p>
+          </details>
+
+          <details>
+            <summary><h3>Which sectors does HESMK work with in Pakistan?</h3></summary>
+            <p>HESMK works with corporate and commercial organizations, banks and financial institutions, industrial and manufacturing operations, real estate and housing developments, hospitals and healthcare facilities, and NGOs and INGOs operating in Pakistan.</p>
+          </details>
+
+          <details>
+            <summary><h3>Who leads HESMK?</h3></summary>
+            <p>HESMK is led by Khalid Habib, Founder &amp; CEO, a former Special Services Group (SSG) officer who holds the CPP® (Certified Protection Professional) from ASIS International and the CSMP Level 6 (Certified Security Management Professional) from the International Security Management Institute, UK, with more than 20 years in security, risk management and business resilience.</p>
+          </details>
+
+          <details>
+            <summary><h3>Where does HESMK operate and how can I contact it?</h3></summary>
+            <p>HESMK is based in Islamabad and serves organizations across Pakistan and in selected international markets. Contact <a href="mailto:info@hesmk.com.pk">info@hesmk.com.pk</a> or WhatsApp <a href="https://wa.me/923215300549">+92 321 5300549</a> to request a confidential security risk consultation.</p>
+          </details>
+        </div>
       </div>
     </section>
 

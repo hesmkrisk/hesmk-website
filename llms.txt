@@ -1,0 +1,30 @@
+# HESMK Integrated Solutions
+
+> HESMK Integrated Solutions (SMC-Private) Limited is a risk-based security consultancy based in Islamabad, Pakistan. It helps organizations identify, assess and manage security risk — and connect security decisions to business impact, investment, governance and resilience. HESMK is an advisory firm: it does not provide security guards or sell equipment.
+
+Founder & CEO: Khalid Habib — former Special Services Group (SSG) officer, CPP® (Certified Protection Professional, ASIS International), CSMP Level 6 (Certified Security Management Professional, International Security Management Institute, UK), member of ASIS International and ISMI, with 20+ years in security, risk management and business resilience.
+
+Service area: Pakistan and selected international markets.
+Contact: info@hesmk.com.pk · WhatsApp +92 321 5300549 · https://hesmk.com.pk/
+
+Approach: Context → Threat → Vulnerability → Consequence → Risk → Control → Resilience. Security measures should follow assessed risk, be proportionate, and support executive decision-making. HESMK complements an organization's existing security arrangements through independent assessment rather than replacing them.
+
+Sectors served: corporate and commercial; banking and financial services; industrial and manufacturing; real estate and housing; healthcare and hospitals; NGOs and INGOs.
+
+## Services
+
+- [Security Risk Assessment](https://hesmk.com.pk/security-risk-assessment.html): Enterprise, site and facility security risk assessment in Pakistan — threats, vulnerabilities, critical assets, consequences, risk register, gap analysis and risk treatment planning.
+- [Security Risk Management](https://hesmk.com.pk/security-risk-management.html): Risk analysis, evaluation and prioritization; security governance and risk treatment.
+- [Physical & Protective Security](https://hesmk.com.pk/physical-protective-security.html): Perimeter, access control, surveillance, protective security planning and security architecture.
+- [Threat & Counter-Terrorism Advisory](https://hesmk.com.pk/counter-terrorism-threat-management.html): Threat analysis, hostile threat assessment, vulnerability reduction and protective planning.
+- [Organizational Resilience & Business Continuity](https://hesmk.com.pk/organizational-resilience-business-continuity.html): Crisis and emergency management, business impact assessment, continuity and recovery planning.
+- [Security Governance & Risk Advisory](https://hesmk.com.pk/security-governance-risk-advisory.html): Executive security governance and risk-informed security decision support.
+
+## Insights
+
+- [Security Insights](https://hesmk.com.pk/security-insights.html): HESMK articles on security risk management in Pakistan.
+- [Security Risk Assessment in Pakistan](https://hesmk.com.pk/security-insights/security-risk-assessment-pakistan.html): Why and how organizations in Pakistan should assess security risk before investing in controls.
+
+## Optional
+
+- [Home](https://hesmk.com.pk/): Overview, methodology, sectors, credentials and consultation request.
