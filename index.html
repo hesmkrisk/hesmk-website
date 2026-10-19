@@ -973,6 +973,24 @@
 
     .footer-inner small { font-size: .72rem; }
 
+    .footer-meta {
+      display: flex;
+      align-items: center;
+      flex-wrap: wrap;
+      gap: 22px;
+    }
+
+    .footer-social {
+      font-size: .72rem;
+      font-weight: 700;
+      letter-spacing: .08em;
+      text-transform: uppercase;
+      color: var(--accent);
+      transition: .2s;
+    }
+
+    .footer-social:hover { color: var(--accent-light); }
+
     /* REVEAL */
     .reveal {
       opacity: 0;
@@ -1206,6 +1224,7 @@
         { "@type": "Country", "name": "Pakistan" }
       ],
       "founder": { "@id": "https://hesmk.com.pk/#khalid-habib" },
+      "sameAs": ["https://www.linkedin.com/company/145275588/"],
       "contactPoint": {
         "@type": "ContactPoint",
         "contactType": "Consultation enquiries",
@@ -1247,6 +1266,7 @@
       "jobTitle": "Founder & CEO",
       "worksFor": { "@id": "https://hesmk.com.pk/#organization" },
       "description": "Former Special Services Group (SSG) officer with 20+ years in corporate security, risk management and business resilience.",
+      "sameAs": ["https://www.linkedin.com/in/khalid-habib-kahut/"],
       "alumniOf": { "@type": "CollegeOrUniversity", "name": "National University of Sciences and Technology (NUST), Islamabad" },
       "hasCredential": [
         { "@type": "EducationalOccupationalCredential", "name": "CPP® — Certified Protection Professional", "recognizedBy": { "@type": "Organization", "name": "ASIS International" } },
@@ -1552,7 +1572,10 @@
   <footer>
     <div class="container footer-inner">
       <img class="footer-logo" src="logo-classic-authority-footer.svg" width="1380" height="440" alt="HESMK Integrated Solutions logo">
-      <small>© 2026 HESMK Integrated Solutions. All rights reserved.</small>
+      <div class="footer-meta">
+        <a class="footer-social" href="https://www.linkedin.com/company/145275588/" target="_blank" rel="noopener" aria-label="HESMK Integrated Solutions on LinkedIn">LinkedIn</a>
+        <small>© 2026 HESMK Integrated Solutions. All rights reserved.</small>
+      </div>
     </div>
   </footer>
 
